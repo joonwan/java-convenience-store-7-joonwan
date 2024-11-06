@@ -5,8 +5,6 @@ import java.util.Objects;
 
 public class Promotion {
 
-    private long id;
-
     private String name;
     private int buy;
     private int get;
