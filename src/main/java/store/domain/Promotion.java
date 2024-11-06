@@ -1,6 +1,7 @@
 package store.domain;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Promotion {
 
@@ -22,5 +23,24 @@ public class Promotion {
 
     public boolean hasName(String name) {
         return this.name.equals(name);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Promotion promotion = (Promotion) o;
+        return buy == promotion.buy && get == promotion.get && Objects.equals(name, promotion.name)
+                && Objects.equals(startTime, promotion.startTime) && Objects.equals(endTime,
+                promotion.endTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, buy, get, startTime, endTime);
     }
 }

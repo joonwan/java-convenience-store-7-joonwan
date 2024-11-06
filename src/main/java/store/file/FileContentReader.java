@@ -16,7 +16,7 @@ public class FileContentReader {
         this.filePath = filePath;
     }
 
-    public List<String> readContents() {
+    public List<String> readContents (){
         try {
             List<String> contents = new ArrayList<>();
             BufferedReader bf = new BufferedReader(new FileReader(filePath));
