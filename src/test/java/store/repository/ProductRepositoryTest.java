@@ -24,8 +24,8 @@ class ProductRepositoryTest {
     @DisplayName("상품을 저장할 수 있어야 한다.")
     @Test
     void save() {
-        Product coke = new Product("coke", 1000, 10);
-        Product juice = new Product("juice", 1000, 10);
+        Product coke = new Product("coke", 1000, 10, 0);
+        Product juice = new Product("juice", 1000, 10, 0);
 
         productRepository.save("coke", coke);
         productRepository.save("juice", juice);
@@ -40,8 +40,8 @@ class ProductRepositoryTest {
     @CsvSource(value = {"coke,coke", "name, name", "juice, juice"})
     void duplicatedNameSave(String name, String duplicatedName) {
         //given
-        Product product = new Product(name, 1000, 10);
-        Product duplicatedProduct = new Product(duplicatedName, 1000, 10);
+        Product product = new Product(name, 1000, 10, 0);
+        Product duplicatedProduct = new Product(duplicatedName, 1000, 10, 0);
         productRepository.save(name, product);
 
         assertThatThrownBy(() -> productRepository.save(duplicatedName, duplicatedProduct))
@@ -54,7 +54,7 @@ class ProductRepositoryTest {
     @Test
     void findByName() {
         //given
-        Product coke = new Product("coke", 1000, 10);
+        Product coke = new Product("coke", 1000, 10, 0);
         productRepository.save("coke", coke);
 
         //when
@@ -69,8 +69,8 @@ class ProductRepositoryTest {
     @ValueSource(strings = {"없는이름1", "없는이름2"})
     void findByNotExistName(String name) {
 
-        Product coke = new Product("coke", 1000, 10);
-        Product juice = new Product("juice", 1000, 10);
+        Product coke = new Product("coke", 1000, 10, 0);
+        Product juice = new Product("juice", 1000, 10, 0);
         productRepository.save("coke", coke);
         productRepository.save("juice", juice);
 
@@ -84,8 +84,8 @@ class ProductRepositoryTest {
     @NullSource
     void findByNull(String name) {
 
-        Product coke = new Product("coke", 1000, 10);
-        Product juice = new Product("juice", 1000, 10);
+        Product coke = new Product("coke", 1000, 10, 0);
+        Product juice = new Product("juice", 1000, 10, 0);
         productRepository.save("coke", coke);
         productRepository.save("juice", juice);
 
