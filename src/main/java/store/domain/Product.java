@@ -1,32 +1,37 @@
 package store.domain;
 
 import java.util.Objects;
+import store.dto.StockStatus;
 
 public class Product {
 
     private String name;
     private int price;
-    private int promotionQuantity;
-    private int defaultQuantity;
-    private Promotion promotion;
+    private int promotionStockQuantity;
+    private int defaultStockQuantity;
+    private String promotionName;
 
-    public Product(String name, int price, int promotionQuantity, int defaultQuantity) {
+    public Product(String name, int price, int promotionStockQuantity, int defaultStockQuantity) {
         this.name = name;
         this.price = price;
-        this.promotionQuantity = promotionQuantity;
-        this.defaultQuantity = defaultQuantity;
+        this.promotionStockQuantity = promotionStockQuantity;
+        this.defaultStockQuantity = defaultStockQuantity;
     }
 
     public void increasePromotionQuantity(int amount) {
-        this.promotionQuantity += amount;
+        this.promotionStockQuantity += amount;
     }
 
     public void increaseDefaultQuantity(int amount) {
-        this.defaultQuantity += amount;
+        this.defaultStockQuantity += amount;
     }
 
-    public void applyPromotion(Promotion promotion) {
-        this.promotion = promotion;
+    public void applyPromotion(String promotionName) {
+        this.promotionName = promotionName;
+    }
+
+    public StockStatus getStockStatus() {
+        return new StockStatus(name, price, promotionStockQuantity, defaultStockQuantity, promotionName);
     }
 
     @Override
