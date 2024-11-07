@@ -23,23 +23,23 @@ class ProductRepositoryTest {
     @DisplayName("상품을 저장할 수 있어야 한다.")
     @Test
     void save() {
-        Product coke = new Product("coke", 1000);
-        Product juice = new Product("juice", 1000);
+        Product coke = new Product("coke", 1000, 10);
+        Product juice = new Product("juice", 1000, 10);
 
-        productRepository.save(coke);
-        productRepository.save(juice);
+        productRepository.save("coke", coke);
+        productRepository.save("juice", juice);
 
         assertThat(productRepository.size()).isEqualTo(2);
-        assertThat(productRepository.contains(coke)).isTrue();
-        assertThat(productRepository.contains(juice)).isTrue();
+        assertThat(productRepository.containsName("coke")).isTrue();
+        assertThat(productRepository.containsName("juice")).isTrue();
     }
 
     @DisplayName("저장소에 해당 이름을 가진 상품이 존재할 경우 해당 이름을 가진 상품을 반환해야 한다.")
     @Test
     void findByName() {
         //given
-        Product coke = new Product("coke", 1000);
-        productRepository.save(coke);
+        Product coke = new Product("coke", 1000, 10);
+        productRepository.save("coke", coke);
 
         //when
         Product findProduct = productRepository.findByName("coke");
@@ -53,10 +53,10 @@ class ProductRepositoryTest {
     @ValueSource(strings = {"없는이름1", "없는이름2"})
     void findByNotExistName(String name) {
 
-        Product coke = new Product("coke", 1000);
-        Product juice = new Product("juice", 1000);
-        productRepository.save(coke);
-        productRepository.save(juice);
+        Product coke = new Product("coke", 1000, 10);
+        Product juice = new Product("juice", 1000, 10);
+        productRepository.save("coke", coke);
+        productRepository.save("juice", juice);
 
         assertThatThrownBy(() -> productRepository.findByName(name))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -68,10 +68,10 @@ class ProductRepositoryTest {
     @NullSource
     void findByNull(String name) {
 
-        Product coke = new Product("coke", 1000);
-        Product juice = new Product("juice", 1000);
-        productRepository.save(coke);
-        productRepository.save(juice);
+        Product coke = new Product("coke", 1000, 10);
+        Product juice = new Product("juice", 1000, 10);
+        productRepository.save("coke", coke);
+        productRepository.save("juice", juice);
 
         assertThatThrownBy(() -> productRepository.findByName(name))
                 .isInstanceOf(IllegalArgumentException.class)
