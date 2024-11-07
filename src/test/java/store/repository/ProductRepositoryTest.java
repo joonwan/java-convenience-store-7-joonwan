@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import store.domain.Product;
@@ -32,6 +33,21 @@ class ProductRepositoryTest {
         assertThat(productRepository.size()).isEqualTo(2);
         assertThat(productRepository.containsName("coke")).isTrue();
         assertThat(productRepository.containsName("juice")).isTrue();
+    }
+
+    @DisplayName("같은 이름을 가진 상품을 중복해서 저장할 수 없다.")
+    @ParameterizedTest
+    @CsvSource(value = {"coke,coke", "name, name", "juice, juice"})
+    void duplicatedNameSave(String name, String duplicatedName) {
+        //given
+        Product product = new Product(name, 1000, 10);
+        Product duplicatedProduct = new Product(duplicatedName, 1000, 10);
+        productRepository.save(name, product);
+
+        assertThatThrownBy(() -> productRepository.save(duplicatedName, duplicatedProduct))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 존재하는 상품입니다.");
+
     }
 
     @DisplayName("저장소에 해당 이름을 가진 상품이 존재할 경우 해당 이름을 가진 상품을 반환해야 한다.")
