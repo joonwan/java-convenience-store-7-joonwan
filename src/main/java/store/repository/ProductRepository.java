@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import store.domain.Product;
 
 public class ProductRepository {
@@ -16,7 +17,9 @@ public class ProductRepository {
     }
 
     public List<Product> findAll() {
-        return new ArrayList<>();
+        return store.keySet().stream()
+                .map(store::get)
+                .collect(Collectors.toList());
     }
 
 
