@@ -3,6 +3,7 @@ package store.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,23 @@ class ProductRepositoryTest {
         assertThat(productRepository.size()).isEqualTo(2);
         assertThat(productRepository.containsName("coke")).isTrue();
         assertThat(productRepository.containsName("juice")).isTrue();
+    }
+
+    @DisplayName("저장된 모든 상품을 반환할 수 있어야 한다.")
+    @Test
+    void findAll() {
+        Product coke = new Product("coke", 1000, 10, 0);
+        Product juice = new Product("juice", 1000, 10, 0);
+
+        productRepository.save("coke", coke);
+        productRepository.save("juice", juice);
+
+        //when
+        List<Product> products = productRepository.findAll();
+
+        //then
+        assertThat(products).hasSize(2)
+                .containsExactly(coke, juice);
     }
 
     @DisplayName("같은 이름을 가진 상품을 중복해서 저장할 수 없다.")

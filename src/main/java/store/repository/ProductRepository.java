@@ -1,6 +1,8 @@
 package store.repository;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import store.domain.Product;
 
@@ -12,6 +14,11 @@ public class ProductRepository {
         validateNotDuplicatedKey(name);
         store.put(name, product);
     }
+
+    public List<Product> findAll() {
+        return new ArrayList<>();
+    }
+
 
     public Product findByName(String name) {
         validateNotNull(name);
