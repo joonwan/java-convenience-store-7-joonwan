@@ -1,12 +1,12 @@
 package store.repository;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import store.domain.Product;
 
 public class ProductRepository {
 
-    private final Map<String, Product> store = new HashMap<>();
+    private final Map<String, Product> store = new LinkedHashMap<>();
 
     public void save(String name, Product product) {
         validateNotDuplicatedKey(name);
@@ -19,6 +19,7 @@ public class ProductRepository {
         Product product = store.get(name);
         if (product == null)
             throw new IllegalArgumentException("해당 이름을 가진 상품이 존재하지 않습니다.");
+
         return product;
     }
 
@@ -26,7 +27,7 @@ public class ProductRepository {
         return store.size();
     }
 
-    public boolean containsName(String  name) {
+    public boolean containsName(String name) {
         return store.containsKey(name);
     }
 
