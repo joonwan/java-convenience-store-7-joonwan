@@ -1,6 +1,7 @@
 package store.util;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
@@ -38,8 +39,8 @@ public class PromotionFileParser {
         String name = promotionContents.get(NAME_INDEX);
         int buy = parseToQuantity(promotionContents.get(BUY_INDEX));
         int get = parseToQuantity(promotionContents.get(GET_INDEX));
-        LocalDate startDate = parseToLocalDate(promotionContents.get(START_DATE_INDEX));
-        LocalDate endDate = parseToLocalDate(promotionContents.get(END_DATE_INDEX));
+        LocalDateTime startDate = parseToStartDateTime(promotionContents.get(START_DATE_INDEX));
+        LocalDateTime endDate = parseToEndDateTime(promotionContents.get(END_DATE_INDEX));
 
         return new Promotion(name, buy, get, startDate, endDate);
     }
@@ -52,9 +53,19 @@ public class PromotionFileParser {
         }
     }
 
-    private static LocalDate parseToLocalDate(String rawLocalDate) {
+    private static LocalDateTime parseToStartDateTime(String rawLocalDate) {
         try {
-            return LocalDate.parse(rawLocalDate, DateTimeFormatter.ofPattern(LOCAL_DATE_FORMAT));
+            LocalDate startDate = LocalDate.parse(rawLocalDate, DateTimeFormatter.ofPattern(LOCAL_DATE_FORMAT));
+            return  startDate.atTime(0, 0, 0);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("날짜 입력 형식은 yyyy-MM-dd 입니다.");
+        }
+    }
+
+    private static LocalDateTime parseToEndDateTime(String rawLocalDate) {
+        try {
+            LocalDate date = LocalDate.parse(rawLocalDate, DateTimeFormatter.ofPattern(LOCAL_DATE_FORMAT));
+            return  date.atTime(23, 59, 59);
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("날짜 입력 형식은 yyyy-MM-dd 입니다.");
         }

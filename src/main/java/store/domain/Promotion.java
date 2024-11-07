@@ -1,6 +1,6 @@
 package store.domain;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Promotion {
@@ -8,15 +8,15 @@ public class Promotion {
     private String name;
     private int buy;
     private int get;
-    private LocalDate startTime;
-    private LocalDate endTime;
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
 
-    public Promotion(String name, int buy, int get, LocalDate startTime, LocalDate endTime) {
+    public Promotion(String name, int buy, int get, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.name = name;
         this.buy = buy;
         this.get = get;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
     }
 
     public boolean hasName(String name) {
@@ -33,12 +33,12 @@ public class Promotion {
         }
         Promotion promotion = (Promotion) o;
         return buy == promotion.buy && get == promotion.get && Objects.equals(name, promotion.name)
-                && Objects.equals(startTime, promotion.startTime) && Objects.equals(endTime,
-                promotion.endTime);
+                && Objects.equals(startDateTime, promotion.startDateTime) && Objects.equals(endDateTime,
+                promotion.endDateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, buy, get, startTime, endTime);
+        return Objects.hash(name, buy, get, startDateTime, endDateTime);
     }
 }

@@ -3,7 +3,7 @@ package store.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,8 +15,8 @@ import store.domain.Promotion;
 class PromotionRepositoryTest {
 
     private final PromotionRepository promotionRepository = new PromotionRepository();
-    private final LocalDate startDate = LocalDate.of(2024, 11, 2);
-    private final LocalDate endDate = LocalDate.of(2024, 11, 10);
+    private final LocalDateTime startDateTime = LocalDateTime.of(2024, 11, 2, 0, 0, 0);
+    private final LocalDateTime endDateTime = LocalDateTime.of(2024, 12, 31, 23, 59, 59);
 
     @AfterEach
     void clearRepository() {
@@ -26,8 +26,8 @@ class PromotionRepositoryTest {
     @DisplayName("프로모션을 저장할 수 있어야 한다.")
     @Test
     void save() {
-        Promotion carbonatedDrinkTwoPlusOne = new Promotion("탄산2+1", 1, 2, startDate, endDate);
-        Promotion mdRecommendedProduction = new Promotion("MD추천상품", 1, 2, startDate, endDate);
+        Promotion carbonatedDrinkTwoPlusOne = new Promotion("탄산2+1", 1, 2, startDateTime, endDateTime);
+        Promotion mdRecommendedProduction = new Promotion("MD추천상품", 1, 2, startDateTime, endDateTime);
 
         promotionRepository.save(carbonatedDrinkTwoPlusOne);
         promotionRepository.save(mdRecommendedProduction);
@@ -41,7 +41,7 @@ class PromotionRepositoryTest {
     @ParameterizedTest
     @ValueSource(strings = {"탄산2+1", "MD추천상품"})
     void findByName(String name) {
-        Promotion promotion = new Promotion(name, 1, 2, startDate, endDate);
+        Promotion promotion = new Promotion(name, 1, 2, startDateTime, endDateTime);
         promotionRepository.save(promotion);
 
         Promotion findPromotion = promotionRepository.findByPromotionName(name);
@@ -53,8 +53,8 @@ class PromotionRepositoryTest {
     @ParameterizedTest
     @ValueSource(strings = {"없는이름1", "없는이름2", "없는이름3"})
     void notFoundName(String name) {
-        Promotion carbonatedDrinkTwoPlusOne = new Promotion("탄산2+1", 1, 2, startDate, endDate);
-        Promotion mdRecommendedProduction = new Promotion("MD추천상품", 1, 2, startDate, endDate);
+        Promotion carbonatedDrinkTwoPlusOne = new Promotion("탄산2+1", 1, 2, startDateTime, endDateTime);
+        Promotion mdRecommendedProduction = new Promotion("MD추천상품", 1, 2, startDateTime, endDateTime);
 
         promotionRepository.save(carbonatedDrinkTwoPlusOne);
         promotionRepository.save(mdRecommendedProduction);
@@ -67,9 +67,9 @@ class PromotionRepositoryTest {
     @DisplayName("이름으로 프로모션을 찾을 때 null 이 들어올 수 없다.")
     @ParameterizedTest
     @NullSource
-    void inputNullFindByName (String name) {
-        Promotion carbonatedDrinkTwoPlusOne = new Promotion("탄산2+1", 1, 2, startDate, endDate);
-        Promotion mdRecommendedProduction = new Promotion("MD추천상품", 1, 2, startDate, endDate);
+    void inputNullFindByName(String name) {
+        Promotion carbonatedDrinkTwoPlusOne = new Promotion("탄산2+1", 1, 2, startDateTime, endDateTime);
+        Promotion mdRecommendedProduction = new Promotion("MD추천상품", 1, 2, startDateTime, endDateTime);
 
         promotionRepository.save(carbonatedDrinkTwoPlusOne);
         promotionRepository.save(mdRecommendedProduction);

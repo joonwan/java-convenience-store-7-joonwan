@@ -3,7 +3,7 @@ package store.util;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,13 +15,12 @@ class PromotionFileParserTest {
     @DisplayName("프로모션 파일의 형식이 올바를 경우 해당 내용을 기반으로 Promotion 의 인스턴스를 생성해야 한다.")
     @Test
     void parseToPromotion() {
-        LocalDate startDate = LocalDate.of(2024, 11, 1);
-        LocalDate endDate = LocalDate.of(2024, 11, 30);
-        Promotion expectedPromotion = new Promotion("반짝할인", 1, 1, startDate, endDate);
+        LocalDateTime startDateTime = LocalDateTime.of(2024, 11, 1, 0, 0, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(2024, 11, 30, 23, 59, 59);
+        Promotion expectedPromotion = new Promotion("반짝할인", 1, 1, startDateTime, endDateTime);
         String rawPromotion = "반짝할인,1,1,2024-11-01,2024-11-30";
 
         Promotion promotion = PromotionFileParser.parseToPromotion(rawPromotion);
-
         assertThat(promotion).isEqualTo(expectedPromotion);
     }
 
