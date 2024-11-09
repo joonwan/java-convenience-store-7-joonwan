@@ -19,6 +19,10 @@ public class Product {
         this.defaultStockQuantity = defaultStockQuantity;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void increasePromotionQuantity(int amount) {
         this.promotionStockQuantity += amount;
     }
@@ -95,4 +99,6 @@ public class Product {
     public int getNotApplicableProductCount(int orderQuantity) {
         return orderQuantity - promotion.getPromotionAppliedQuantity(promotionStockQuantity);
     }
+
+
 }

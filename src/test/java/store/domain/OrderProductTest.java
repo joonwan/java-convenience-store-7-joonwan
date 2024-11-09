@@ -72,7 +72,7 @@ class OrderProductTest {
         OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus();
 
         assertThat(orderProductStatus.getOrderProductType()).isEqualTo(PARTIAL_PROMOTION);
-        assertThat(orderProductStatus.getAdditionalGiftProductCount()).isEqualTo(additionalGiftProductCount);
+        assertThat(orderProductStatus.getAdditionalReceiveCount()).isEqualTo(additionalGiftProductCount);
         assertThat(orderProductStatus.getNotApplicableProductCount()).isEqualTo(notApplicableProductCount);
     }
 
@@ -88,7 +88,7 @@ class OrderProductTest {
         OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus();
 
         assertThat(orderProductStatus.getOrderProductType()).isEqualTo(ADDITIONAL_PROMOTION);
-        assertThat(orderProductStatus.getAdditionalGiftProductCount()).isEqualTo(additionalGiftProductCount);
+        assertThat(orderProductStatus.getAdditionalReceiveCount()).isEqualTo(additionalGiftProductCount);
         assertThat(orderProductStatus.getNotApplicableProductCount()).isEqualTo(notApplicableProductCount);
     }
 
@@ -104,7 +104,7 @@ class OrderProductTest {
         OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus();
 
         assertThat(orderProductStatus.getOrderProductType()).isEqualTo(DEFAULT);
-        assertThat(orderProductStatus.getAdditionalGiftProductCount()).isEqualTo(additionalGiftProductCount);
+        assertThat(orderProductStatus.getAdditionalReceiveCount()).isEqualTo(additionalGiftProductCount);
         assertThat(orderProductStatus.getNotApplicableProductCount()).isEqualTo(notApplicableProductCount);
     }
 
@@ -118,7 +118,7 @@ class OrderProductTest {
         OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus();
 
         assertThat(orderProductStatus.getOrderProductType()).isEqualTo(DEFAULT);
-        assertThat(orderProductStatus.getAdditionalGiftProductCount()).isEqualTo(additionalGiftProductCount);
+        assertThat(orderProductStatus.getAdditionalReceiveCount()).isEqualTo(additionalGiftProductCount);
         assertThat(orderProductStatus.getNotApplicableProductCount()).isEqualTo(notApplicableProductCount);
     }
 
@@ -133,7 +133,7 @@ class OrderProductTest {
         OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus();
 
         assertThat(orderProductStatus.getOrderProductType()).isEqualTo(DEFAULT);
-        assertThat(orderProductStatus.getAdditionalGiftProductCount()).isEqualTo(additionalGiftProductCount);
+        assertThat(orderProductStatus.getAdditionalReceiveCount()).isEqualTo(additionalGiftProductCount);
         assertThat(orderProductStatus.getNotApplicableProductCount()).isEqualTo(notApplicableProductCount);
     }
 }

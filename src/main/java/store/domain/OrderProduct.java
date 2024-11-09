@@ -10,7 +10,6 @@ public class OrderProduct {
     private final int orderQuantity;
     private final Product product;
     private final LocalDateTime orderDateTime;
-    private OrderProductType type;
 
     public OrderProduct(Product product, int orderQuantity, LocalDateTime orderDateTime) {
         validatePositiveQuantity(orderQuantity);
@@ -24,14 +23,14 @@ public class OrderProduct {
     public OrderProductStatus getOrderProductStatus() {
         OrderProductType type = getOderProductType();
         if (type.equals(DEFAULT)) {
-            return new OrderProductStatus(type, 0, 0);
+            return new OrderProductStatus(product.getName(), orderQuantity, type, 0, 0);
         }
 
         if (type.equals(ADDITIONAL_PROMOTION)) {
-            return new OrderProductStatus(type, getAdditionalGiftProductCount(), 0);
+            return new OrderProductStatus(product.getName(), orderQuantity, type, getAdditionalGiftProductCount(), 0);
         }
 
-        return new OrderProductStatus(type, 0, getNotApplicableProductCount());
+        return new OrderProductStatus(product.getName(), orderQuantity,type, 0, getNotApplicableProductCount());
     }
 
     private int getNotApplicableProductCount() {
@@ -48,7 +47,7 @@ public class OrderProduct {
         }
     }
 
-    private  void validateEnoughQuantity(Product product, int quantity, LocalDateTime orderDateTime) {
+    private void validateEnoughQuantity(Product product, int quantity, LocalDateTime orderDateTime) {
         if (!product.isEnoughStockQuantity(quantity, orderDateTime)) {
             throw new IllegalArgumentException("주문 수량은 총 재고수량을 초과할 수 없습니다.");
         }
