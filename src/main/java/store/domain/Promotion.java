@@ -1,7 +1,6 @@
 package store.domain;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 public class Promotion {
 
@@ -19,26 +18,20 @@ public class Promotion {
         this.endDateTime = endDateTime;
     }
 
-    public boolean hasName(String name) {
-        return this.name.equals(name);
+    public String getName() {
+        return name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Promotion promotion = (Promotion) o;
-        return buy == promotion.buy && get == promotion.get && Objects.equals(name, promotion.name)
-                && Objects.equals(startDateTime, promotion.startDateTime) && Objects.equals(endDateTime,
-                promotion.endDateTime);
+    public boolean isAvailableApplyPromotion(LocalDateTime orderDateTime) {
+        return isAfterStartFromDateTime(orderDateTime) && isBeforeFromEndDateTime(orderDateTime);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, buy, get, startDateTime, endDateTime);
+    private boolean isAfterStartFromDateTime(LocalDateTime orderDateTime) {
+        return startDateTime.isEqual(orderDateTime) || startDateTime.isBefore(orderDateTime);
     }
+
+    private boolean isBeforeFromEndDateTime(LocalDateTime orderDateTime) {
+        return endDateTime.isEqual(orderDateTime) || endDateTime.isAfter(orderDateTime);
+    }
+
 }
