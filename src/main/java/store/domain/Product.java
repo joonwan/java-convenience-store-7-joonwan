@@ -85,28 +85,14 @@ public class Product {
     }
 
     public boolean isAdditionalPromotion(int orderQuantity) {
-        int giveAwayStockQuantity = getGiveAwayStockQuantity(orderQuantity);
-        int promotionDecreaseStockCount = promotion.getPromotionDecreaseStockCount(giveAwayStockQuantity);
-
-        int diff = orderQuantity - (promotionDecreaseStockCount + giveAwayStockQuantity);
-        return promotion.isPossibleGiveMoreProduct(diff);
+        return promotion.isPossibleGiveMoreProduct(orderQuantity, promotionStockQuantity);
     }
 
-    public int getGiveAwayStockQuantity(int orderQuantity) {
-        if (orderQuantity <= promotionStockQuantity) {
-            return promotion.getGiveAwayStockQuantity(orderQuantity);
-        }
-        return promotion.getGiveAwayStockQuantity(promotionStockQuantity);
-    }
-
-    public int getAdditionalGiftProductCount(int orderQuantity) {
+    public int getAdditionalGiftProductCount() {
         return promotion.getAdditionalGiftProductCount();
     }
 
     public int getNotApplicableProductCount(int orderQuantity) {
-        int giveAwayStockQuantity = getGiveAwayStockQuantity(orderQuantity);
-        int promotionDecreaseStockCount = promotion.getPromotionDecreaseStockCount(giveAwayStockQuantity);
-
-        return orderQuantity - (promotionDecreaseStockCount + giveAwayStockQuantity);
+        return orderQuantity - promotion.getPromotionAppliedQuantity(promotionStockQuantity);
     }
 }

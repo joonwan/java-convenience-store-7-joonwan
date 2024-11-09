@@ -39,7 +39,7 @@ public class OrderProduct {
     }
 
     private int getAdditionalGiftProductCount() {
-        return product.getAdditionalGiftProductCount(orderQuantity);
+        return product.getAdditionalGiftProductCount();
     }
 
     private void validatePositiveQuantity(int quantity) {
