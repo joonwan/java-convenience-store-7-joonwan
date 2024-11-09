@@ -1,5 +1,6 @@
 package store.domain;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import store.dto.StockStatus;
 
@@ -9,7 +10,7 @@ public class Product {
     private int price;
     private int promotionStockQuantity;
     private int defaultStockQuantity;
-    private String promotionName;
+    private Promotion promotion;
 
     public Product(String name, int price, int promotionStockQuantity, int defaultStockQuantity) {
         this.name = name;
@@ -26,12 +27,37 @@ public class Product {
         this.defaultStockQuantity += amount;
     }
 
-    public void applyPromotion(String promotionName) {
-        this.promotionName = promotionName;
+    public void registerPromotion(Promotion promotion) {
+        this.promotion = promotion;
+    }
+
+    public void clearPromotion() {
+        this.promotion = null;
     }
 
     public StockStatus getStockStatus() {
+        String promotionName = "";
+        if (promotion != null) {
+            promotionName = promotion.getName();
+        }
+
         return new StockStatus(name, price, promotionStockQuantity, defaultStockQuantity, promotionName);
+    }
+
+    public boolean isEnoughStockQuantity(int orderQuantity, LocalDateTime orderDateTime) {
+        if (promotion == null || !promotion.isAvailableApplyPromotion(orderDateTime)) {
+            return orderQuantity <= defaultStockQuantity;
+        }
+
+        return orderQuantity <= (promotionStockQuantity + defaultStockQuantity);
+    }
+
+    public boolean isEnoughPromotionStockQuantity(int orderQuantity) {
+        return orderQuantity <= promotionStockQuantity;
+    }
+
+    public boolean isPromotionApplicable(LocalDateTime orderDateTime) {
+        return promotion != null && promotion.isAvailableApplyPromotion(orderDateTime);
     }
 
     @Override
@@ -51,4 +77,36 @@ public class Product {
         return Objects.hash(name, price);
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+
+    public boolean isAdditionalPromotion(int orderQuantity) {
+        int giveAwayStockQuantity = getGiveAwayStockQuantity(orderQuantity);
+        int promotionDecreaseStockCount = promotion.getPromotionDecreaseStockCount(giveAwayStockQuantity);
+
+        int diff = orderQuantity - (promotionDecreaseStockCount + giveAwayStockQuantity);
+        return promotion.isPossibleGiveMoreProduct(diff);
+    }
+
+    public int getGiveAwayStockQuantity(int orderQuantity) {
+        if (orderQuantity <= promotionStockQuantity) {
+            return promotion.getGiveAwayStockQuantity(orderQuantity);
+        }
+        return promotion.getGiveAwayStockQuantity(promotionStockQuantity);
+    }
+
+    public int getAdditionalGiftProductCount(int orderQuantity) {
+        return promotion.getAdditionalGiftProductCount();
+    }
+
+    public int getNotApplicableProductCount(int orderQuantity) {
+        int giveAwayStockQuantity = getGiveAwayStockQuantity(orderQuantity);
+        int promotionDecreaseStockCount = promotion.getPromotionDecreaseStockCount(giveAwayStockQuantity);
+
+        return orderQuantity - (promotionDecreaseStockCount + giveAwayStockQuantity);
+    }
 }

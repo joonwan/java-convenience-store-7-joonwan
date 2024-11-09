@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static store.domain.OrderProductType.*;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,12 +25,27 @@ class OrderProductTest {
         product.registerPromotion(promotion);
     }
 
-    @DisplayName("주문 수량은 상품의 재고 수량을 초과할 수 없다.")
+    @DisplayName("프로모션 기간이 아닐때 주문 수량은 기본 재고 수량을 초과할 수 없다.")
     @ParameterizedTest
-    @ValueSource(ints = {18, 19, 20, 21, 22})
-    void invalidOrderQuantity(int orderQuantity) {
+    @ValueSource(ints = {11, 12, 13, 14, 15})
+    void invalidOrderQuantityAtNotPromotionDuration(int orderQuantity) {
 
-        assertThatThrownBy(() -> new OrderProduct(product, orderQuantity))
+        LocalDateTime notPromotionApplicableDateTime = LocalDateTime.of(2024, 12, 1, 0, 0, 0);
+
+        assertThatThrownBy(() -> new OrderProduct(product, orderQuantity, notPromotionApplicableDateTime))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("주문 수량은 총 재고수량을 초과할 수 없습니다.");
+
+    }
+
+    @DisplayName("프로모션 기간일 경우 주문 수량은 기본 재고 수량과 프로모션 재고 수량의 합을 을 초과할 수 없다.")
+    @ParameterizedTest
+    @ValueSource(ints = {18, 19, 20, 21})
+    void invalidOrderQuantityAtPromotionDuration(int orderQuantity) {
+
+        LocalDateTime notPromotionApplicableDateTime = LocalDateTime.of(2024, 11, 1, 0, 0, 0);
+
+        assertThatThrownBy(() -> new OrderProduct(product, orderQuantity, notPromotionApplicableDateTime))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("주문 수량은 총 재고수량을 초과할 수 없습니다.");
 
@@ -40,7 +56,7 @@ class OrderProductTest {
     @ValueSource(ints = {-1, 0})
     void notPositiveOrderQuantity(int orderQuantity) {
 
-        assertThatThrownBy(() -> new OrderProduct(product, orderQuantity))
+        assertThatThrownBy(() -> new OrderProduct(product, orderQuantity, DateTimes.now()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("주문 수량 입력시 양수만 입력할 수 있습니다.");
 
@@ -50,10 +66,10 @@ class OrderProductTest {
     @ParameterizedTest
     @CsvSource(value = {"8,0,2", "9,0,3", "10,0,4", "11,0,5"})
     void partialPromotionType(int orderQuantity, int additionalGiftProductCount, int notApplicableProductCount) {
-        OrderProduct orderProduct = new OrderProduct(product, orderQuantity);
-        LocalDateTime promotionApplicableDateTime = LocalDateTime.of(2024, 11, 1, 0, 0, 0);
 
-        OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus(promotionApplicableDateTime);
+        LocalDateTime promotionApplicableDateTime = LocalDateTime.of(2024, 11, 1, 0, 0, 0);
+        OrderProduct orderProduct = new OrderProduct(product, orderQuantity, promotionApplicableDateTime);
+        OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus();
 
         assertThat(orderProductStatus.getOrderProductType()).isEqualTo(PARTIAL_PROMOTION);
         assertThat(orderProductStatus.getAdditionalGiftProductCount()).isEqualTo(additionalGiftProductCount);
@@ -65,10 +81,11 @@ class OrderProductTest {
     @ParameterizedTest
     @CsvSource(value = {"5,1,0", "2,1,0"})
     void additionalPromotion(int orderQuantity, int additionalGiftProductCount, int notApplicableProductCount) {
-        OrderProduct orderProduct = new OrderProduct(product, orderQuantity);
-        LocalDateTime promotionApplicableDateTime = LocalDateTime.of(2024, 11, 1, 0, 0, 0);
 
-        OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus(promotionApplicableDateTime);
+        LocalDateTime promotionApplicableDateTime = LocalDateTime.of(2024, 11, 1, 0, 0, 0);
+        OrderProduct orderProduct = new OrderProduct(product, orderQuantity, promotionApplicableDateTime);
+
+        OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus();
 
         assertThat(orderProductStatus.getOrderProductType()).isEqualTo(ADDITIONAL_PROMOTION);
         assertThat(orderProductStatus.getAdditionalGiftProductCount()).isEqualTo(additionalGiftProductCount);
@@ -80,10 +97,11 @@ class OrderProductTest {
     @CsvSource(value = {"10,0,0", "4,0,0"})
     void notPromotionProduct(int orderQuantity, int additionalGiftProductCount, int notApplicableProductCount) {
         product.clearPromotion();
-        OrderProduct orderProduct = new OrderProduct(product, orderQuantity);
-        LocalDateTime promotionApplicableDateTime = LocalDateTime.of(2024, 11, 1, 0, 0, 0);
 
-        OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus(promotionApplicableDateTime);
+        LocalDateTime promotionApplicableDateTime = LocalDateTime.of(2024, 11, 1, 0, 0, 0);
+        OrderProduct orderProduct = new OrderProduct(product, orderQuantity, promotionApplicableDateTime);
+
+        OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus();
 
         assertThat(orderProductStatus.getOrderProductType()).isEqualTo(DEFAULT);
         assertThat(orderProductStatus.getAdditionalGiftProductCount()).isEqualTo(additionalGiftProductCount);
@@ -94,10 +112,10 @@ class OrderProductTest {
     @ParameterizedTest
     @CsvSource(value = {"10,0,0", "4,0,0"})
     void notPromotionDateTime(int orderQuantity, int additionalGiftProductCount, int notApplicableProductCount) {
-        OrderProduct orderProduct = new OrderProduct(product, orderQuantity);
-        LocalDateTime promotionApplicableDateTime = LocalDateTime.of(2024, 12, 1, 0, 0, 0);
 
-        OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus(promotionApplicableDateTime);
+        LocalDateTime promotionNotApplicableDateTime = LocalDateTime.of(2024, 12, 1, 0, 0, 0);
+        OrderProduct orderProduct = new OrderProduct(product, orderQuantity, promotionNotApplicableDateTime);
+        OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus();
 
         assertThat(orderProductStatus.getOrderProductType()).isEqualTo(DEFAULT);
         assertThat(orderProductStatus.getAdditionalGiftProductCount()).isEqualTo(additionalGiftProductCount);
@@ -107,11 +125,12 @@ class OrderProductTest {
     @DisplayName("프로모션이 존재하며 프로모션 수량 내에서 주문 수량을 처리가능하지만 추가증정이 더이상 안될경우 타입은 DEFAULT 이다.")
     @ParameterizedTest
     @CsvSource(value = {"7,0,0", "6,0,0"})
-    void notEnoughToAdditionalPromotion(int orderQuantity, int additionalGiftProductCount, int notApplicableProductCount) {
-        OrderProduct orderProduct = new OrderProduct(product, orderQuantity);
-        LocalDateTime promotionApplicableDateTime = LocalDateTime.of(2024, 11, 1, 0, 0, 0);
+    void notEnoughToAdditionalPromotion(int orderQuantity, int additionalGiftProductCount,
+                                        int notApplicableProductCount) {
 
-        OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus(promotionApplicableDateTime);
+        LocalDateTime promotionApplicableDateTime = LocalDateTime.of(2024, 11, 1, 0, 0, 0);
+        OrderProduct orderProduct = new OrderProduct(product, orderQuantity, promotionApplicableDateTime);
+        OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus();
 
         assertThat(orderProductStatus.getOrderProductType()).isEqualTo(DEFAULT);
         assertThat(orderProductStatus.getAdditionalGiftProductCount()).isEqualTo(additionalGiftProductCount);

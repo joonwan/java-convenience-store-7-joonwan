@@ -34,4 +34,19 @@ public class Promotion {
         return endDateTime.isEqual(orderDateTime) || endDateTime.isAfter(orderDateTime);
     }
 
+    public int getGiveAwayStockQuantity(int quantity) {
+        return (quantity / (buy + get)) * get;
+    }
+
+    public int getPromotionDecreaseStockCount(int giveAwayStockQuantity) {
+        return buy * giveAwayStockQuantity;
+    }
+
+    public boolean isPossibleGiveMoreProduct(int diff) {
+        return diff == buy;
+    }
+
+    public int getAdditionalGiftProductCount() {
+        return get;
+    }
 }

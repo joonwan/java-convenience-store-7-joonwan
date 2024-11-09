@@ -1,19 +1,19 @@
 package store.domain;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import store.dto.OrderProductStatus;
 
 public class Order {
 
     private final List<OrderProduct> orderProducts;
-    private final LocalDateTime orderDateTime;
 
-    public Order(List<OrderProduct> orderProducts, LocalDateTime orderDateTime) {
+    public Order(List<OrderProduct> orderProducts) {
         this.orderProducts = orderProducts;
-        this.orderDateTime = orderDateTime;
     }
 
-    public int size() {
-        return orderProducts.size();
+    public List<OrderProductStatus> getOrderProductStatuses() {
+        return orderProducts.stream()
+                .map(OrderProduct::getOrderProductStatus)
+                .toList();
     }
 }
