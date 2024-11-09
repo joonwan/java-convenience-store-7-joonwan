@@ -7,7 +7,7 @@ public class OrderProductStatus {
     private final String productName;
     private int orderQuantity;
     private final OrderProductType orderProductType;
-    private final int additionalReceiveCount;
+    private int additionalReceiveCount;
     private final int notApplicableProductCount;
 
     public OrderProductStatus(String productName, int orderQuantity, OrderProductType orderProductType, int additionalReceiveCount,
@@ -40,7 +40,21 @@ public class OrderProductStatus {
     }
 
     public void setOrderQuantity(int quantity) {
-        this.orderQuantity += quantity;
+        this.orderQuantity = quantity;
     }
 
+    public void setAdditionalReceiveCount(int quantity) {
+        this.additionalReceiveCount = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderProductStatus{" +
+                "productName='" + productName + '\'' +
+                ", orderQuantity=" + orderQuantity +
+                ", orderProductType=" + orderProductType +
+                ", additionalReceiveCount=" + additionalReceiveCount +
+                ", notApplicableProductCount=" + notApplicableProductCount +
+                '}';
+    }
 }

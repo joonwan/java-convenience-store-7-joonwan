@@ -62,16 +62,16 @@ class OrderProductTest {
 
     }
 
-    @DisplayName("프로모션이 적용되며 프로모션 재고를 초과하여 일부 재고에 프로모션이 적용되지 않을 경우 주문상품의 타입은 PARTIAL_PROMOTION 이다.")
+    @DisplayName("프로모션이 적용되며 프로모션 재고를 초과하여 일부 재고에 프로모션이 적용되지 않을 경우 주문상품의 타입은 PARTIAL_APPLIED 이다.")
     @ParameterizedTest
-    @CsvSource(value = {"8,0,2", "9,0,3", "10,0,4", "11,0,5"})
+    @CsvSource(value = {"8,2,2", "9,2,3", "10,2,4", "11,2,5"})
     void partialPromotionType(int orderQuantity, int additionalGiftProductCount, int notApplicableProductCount) {
 
         LocalDateTime promotionApplicableDateTime = LocalDateTime.of(2024, 11, 1, 0, 0, 0);
         OrderProduct orderProduct = new OrderProduct(product, orderQuantity, promotionApplicableDateTime);
         OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus();
 
-        assertThat(orderProductStatus.getOrderProductType()).isEqualTo(PARTIAL_PROMOTION);
+        assertThat(orderProductStatus.getOrderProductType()).isEqualTo(PARTIAL_APPLIED);
         assertThat(orderProductStatus.getAdditionalReceiveCount()).isEqualTo(additionalGiftProductCount);
         assertThat(orderProductStatus.getNotApplicableProductCount()).isEqualTo(notApplicableProductCount);
     }
@@ -79,7 +79,7 @@ class OrderProductTest {
 
     @DisplayName("주문 수량을 프로모션 재고 내에서 처리 가능하며 증정이 가능한 경우 주문 상품의 타입은 ADDITIONAL_PRODUCT 이다.")
     @ParameterizedTest
-    @CsvSource(value = {"5,1,0", "2,1,0"})
+    @CsvSource(value = {"5,1,0", "2,0,0"})
     void additionalPromotion(int orderQuantity, int additionalGiftProductCount, int notApplicableProductCount) {
 
         LocalDateTime promotionApplicableDateTime = LocalDateTime.of(2024, 11, 1, 0, 0, 0);
@@ -87,12 +87,12 @@ class OrderProductTest {
 
         OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus();
 
-        assertThat(orderProductStatus.getOrderProductType()).isEqualTo(ADDITIONAL_PROMOTION);
+        assertThat(orderProductStatus.getOrderProductType()).isEqualTo(CAN_RECEIVE);
         assertThat(orderProductStatus.getAdditionalReceiveCount()).isEqualTo(additionalGiftProductCount);
         assertThat(orderProductStatus.getNotApplicableProductCount()).isEqualTo(notApplicableProductCount);
     }
 
-    @DisplayName("프로모션이 존재하지 않는 주문 상품일 경우 해당 주문 상품의 타입은 DEFAULT 이다.")
+    @DisplayName("프로모션이 존재하지 않는 주문 상품일 경우 해당 주문 상품의 타입은 NOT_APPLIED 이다.")
     @ParameterizedTest
     @CsvSource(value = {"10,0,0", "4,0,0"})
     void notPromotionProduct(int orderQuantity, int additionalGiftProductCount, int notApplicableProductCount) {
@@ -103,12 +103,12 @@ class OrderProductTest {
 
         OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus();
 
-        assertThat(orderProductStatus.getOrderProductType()).isEqualTo(DEFAULT);
+        assertThat(orderProductStatus.getOrderProductType()).isEqualTo(NOT_APPLIED);
         assertThat(orderProductStatus.getAdditionalReceiveCount()).isEqualTo(additionalGiftProductCount);
         assertThat(orderProductStatus.getNotApplicableProductCount()).isEqualTo(notApplicableProductCount);
     }
 
-    @DisplayName("프로모션이 적용되지 않는 시간 범위의 주문 상품일 경우 타입은 DEFUALT 이다.")
+    @DisplayName("프로모션이 적용되지 않는 시간 범위의 주문 상품일 경우 타입은 NOT_APPLIED 이다.")
     @ParameterizedTest
     @CsvSource(value = {"10,0,0", "4,0,0"})
     void notPromotionDateTime(int orderQuantity, int additionalGiftProductCount, int notApplicableProductCount) {
@@ -117,14 +117,14 @@ class OrderProductTest {
         OrderProduct orderProduct = new OrderProduct(product, orderQuantity, promotionNotApplicableDateTime);
         OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus();
 
-        assertThat(orderProductStatus.getOrderProductType()).isEqualTo(DEFAULT);
+        assertThat(orderProductStatus.getOrderProductType()).isEqualTo(NOT_APPLIED);
         assertThat(orderProductStatus.getAdditionalReceiveCount()).isEqualTo(additionalGiftProductCount);
         assertThat(orderProductStatus.getNotApplicableProductCount()).isEqualTo(notApplicableProductCount);
     }
 
     @DisplayName("프로모션이 존재하며 프로모션 수량 내에서 주문 수량을 처리가능하지만 추가증정이 더이상 안될경우 타입은 DEFAULT 이다.")
     @ParameterizedTest
-    @CsvSource(value = {"7,0,0", "6,0,0"})
+    @CsvSource(value = {"7,2,0", "6,2,0"})
     void notEnoughToAdditionalPromotion(int orderQuantity, int additionalGiftProductCount,
                                         int notApplicableProductCount) {
 
@@ -132,7 +132,7 @@ class OrderProductTest {
         OrderProduct orderProduct = new OrderProduct(product, orderQuantity, promotionApplicableDateTime);
         OrderProductStatus orderProductStatus = orderProduct.getOrderProductStatus();
 
-        assertThat(orderProductStatus.getOrderProductType()).isEqualTo(DEFAULT);
+        assertThat(orderProductStatus.getOrderProductType()).isEqualTo(CANNOT_RECEIVE);
         assertThat(orderProductStatus.getAdditionalReceiveCount()).isEqualTo(additionalGiftProductCount);
         assertThat(orderProductStatus.getNotApplicableProductCount()).isEqualTo(notApplicableProductCount);
     }

@@ -3,6 +3,6 @@ package store.domain;
 
 public enum OrderProductType {
 
-    DEFAULT, ADDITIONAL_PROMOTION, PARTIAL_PROMOTION;
+    CANNOT_RECEIVE, CAN_RECEIVE, PARTIAL_APPLIED, NOT_APPLIED;
 
 }

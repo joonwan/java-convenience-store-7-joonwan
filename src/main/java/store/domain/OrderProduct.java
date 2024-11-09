@@ -22,15 +22,39 @@ public class OrderProduct {
 
     public OrderProductStatus getOrderProductStatus() {
         OrderProductType type = getOderProductType();
-        if (type.equals(DEFAULT)) {
-            return new OrderProductStatus(product.getName(), orderQuantity, type, 0, 0);
+        if (type.equals(NOT_APPLIED)) {
+            return createNotAppliedTypeOrderProductStatus(type);
         }
 
-        if (type.equals(ADDITIONAL_PROMOTION)) {
-            return new OrderProductStatus(product.getName(), orderQuantity, type, getAdditionalGiftProductCount(), 0);
+        if (type.equals(PARTIAL_APPLIED)) {
+            return createPartialTypeOrderProductStatus(type);
         }
 
-        return new OrderProductStatus(product.getName(), orderQuantity,type, 0, getNotApplicableProductCount());
+        return createPromotionAppliedTypeProductStatus(type);
+    }
+
+    private OrderProductStatus createNotAppliedTypeOrderProductStatus(OrderProductType type) {
+        String productName = product.getName();
+        return new OrderProductStatus(productName, orderQuantity, type, 0, 0);
+    }
+
+    private OrderProductStatus createPartialTypeOrderProductStatus(OrderProductType type) {
+        String productName = product.getName();
+        int additionalProductCount = getAdditionalGiftProductCount();
+        int notApplicableCount = getNotApplicableProductCount();
+        return new OrderProductStatus(productName, orderQuantity, type, additionalProductCount, notApplicableCount);
+    }
+
+    private OrderProductStatus createPromotionAppliedTypeProductStatus(OrderProductType type) {
+        String productName = product.getName();
+        int additionalProductCount = getAdditionalGiftProductCount();
+        return new OrderProductStatus(productName, orderQuantity, type, additionalProductCount, 0);
+    }
+
+    private OrderProductStatus createAdditionalTypeOderProductStatus(OrderProductType type) {
+        String productName = product.getName();
+        int additionalProductCount = getAdditionalGiftProductCount();
+        return new OrderProductStatus(productName, orderQuantity, type, additionalProductCount, 0);
     }
 
     private int getNotApplicableProductCount() {
@@ -38,7 +62,7 @@ public class OrderProduct {
     }
 
     private int getAdditionalGiftProductCount() {
-        return product.getAdditionalGiftProductCount();
+        return product.getAdditionalGiftProductCount(orderQuantity);
     }
 
     private void validatePositiveQuantity(int quantity) {
@@ -55,20 +79,20 @@ public class OrderProduct {
 
     private OrderProductType getOderProductType() {
         if (!product.isPromotionApplicable(orderDateTime)) {
-            return DEFAULT;
+            return NOT_APPLIED;
         }
 
         if (product.isEnoughPromotionStockQuantity(orderQuantity)) {
             return determineAdditionalPromotion();
         }
 
-        return PARTIAL_PROMOTION;
+        return PARTIAL_APPLIED;
     }
 
     private OrderProductType determineAdditionalPromotion() {
         if (product.isAdditionalPromotion(orderQuantity)) {
-            return ADDITIONAL_PROMOTION;
+            return CAN_RECEIVE;
         }
-        return DEFAULT;
+        return CANNOT_RECEIVE;
     }
 }

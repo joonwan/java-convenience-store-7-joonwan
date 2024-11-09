@@ -38,8 +38,11 @@ public class Promotion {
         return orderQuantity % (buy + get) == buy && get <= (promotionStockQuantity - orderQuantity);
     }
 
-    public int getAdditionalGiftProductCount() {
-        return get;
+    public int getAdditionalGiftProductCount(int orderQuantity, int promotionStockQuantity) {
+        if (orderQuantity < promotionStockQuantity) {
+            return orderQuantity / (buy + get) * get;
+        }
+        return promotionStockQuantity / (buy + get) * get;
     }
 
     public int getPromotionAppliedQuantity(int promotionStockQuantity) {

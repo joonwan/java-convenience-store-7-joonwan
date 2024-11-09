@@ -23,6 +23,10 @@ public class Product {
         return name;
     }
 
+    public boolean hasPromotion() {
+        return promotion != null;
+    }
+
     public void increasePromotionQuantity(int amount) {
         this.promotionStockQuantity += amount;
     }
@@ -92,8 +96,8 @@ public class Product {
         return promotion.isPossibleGiveMoreProduct(orderQuantity, promotionStockQuantity);
     }
 
-    public int getAdditionalGiftProductCount() {
-        return promotion.getAdditionalGiftProductCount();
+    public int getAdditionalGiftProductCount(int orderQuantity) {
+        return promotion.getAdditionalGiftProductCount(orderQuantity, promotionStockQuantity);
     }
 
     public int getNotApplicableProductCount(int orderQuantity) {
