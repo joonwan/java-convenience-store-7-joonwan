@@ -51,12 +51,6 @@ public class OrderProduct {
         return new OrderProductStatus(productName, orderQuantity, type, additionalProductCount, 0);
     }
 
-    private OrderProductStatus createAdditionalTypeOderProductStatus(OrderProductType type) {
-        String productName = product.getName();
-        int additionalProductCount = getAdditionalGiftProductCount();
-        return new OrderProductStatus(productName, orderQuantity, type, additionalProductCount, 0);
-    }
-
     private int getNotApplicableProductCount() {
         return product.getNotApplicableProductCount(orderQuantity);
     }
@@ -73,7 +67,7 @@ public class OrderProduct {
 
     private void validateEnoughQuantity(Product product, int quantity, LocalDateTime orderDateTime) {
         if (!product.isEnoughStockQuantity(quantity, orderDateTime)) {
-            throw new IllegalArgumentException("주문 수량은 총 재고수량을 초과할 수 없습니다.");
+            throw new IllegalArgumentException("재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
         }
     }
 

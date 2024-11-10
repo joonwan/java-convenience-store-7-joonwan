@@ -34,7 +34,7 @@ class OrderProductTest {
 
         assertThatThrownBy(() -> new OrderProduct(product, orderQuantity, notPromotionApplicableDateTime))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("주문 수량은 총 재고수량을 초과할 수 없습니다.");
+                .hasMessage("재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
 
     }
 
@@ -47,7 +47,7 @@ class OrderProductTest {
 
         assertThatThrownBy(() -> new OrderProduct(product, orderQuantity, notPromotionApplicableDateTime))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("주문 수량은 총 재고수량을 초과할 수 없습니다.");
+                .hasMessage("재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
 
     }
 

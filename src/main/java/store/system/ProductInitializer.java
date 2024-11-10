@@ -91,7 +91,8 @@ public class ProductInitializer {
         }
         Product product = ProductFileParser.parseToPromotionProduct(content);
         String promotionName = ProductFileParser.getPromotionName(content);
-        product.applyPromotion(promotionName);
+        Promotion promotion = promotionRepository.findByPromotionName(promotionName);
+        product.registerPromotion(promotion);
         productRepository.save(productName, product);
     }
 

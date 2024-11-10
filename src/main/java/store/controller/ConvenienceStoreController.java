@@ -6,6 +6,7 @@ import static store.domain.OrderProductType.*;
 import java.util.ArrayList;
 import java.util.List;
 import store.domain.Answer;
+import store.domain.BillPaper;
 import store.domain.Order;
 import store.domain.OrderProductType;
 import store.dto.OrderProductStatus;
@@ -29,9 +30,14 @@ public class ConvenienceStoreController {
         while (true) {
             printStartMessage();
             Order order = createOrder();
-
-            final List<OrderProductStatus> confirmedOrderProductStatuses = applyUserConfirm(order);
-            orderService.createBillPaper(confirmedOrderProductStatuses);
+            List<OrderProductStatus> confirmedOrderProductStatuses = applyUserConfirm(order);
+            BillPaper billPaper = orderService.getBillPaper(confirmedOrderProductStatuses);
+            attemptMembershipDiscount(billPaper);
+            printBillPaper(billPaper);
+            Answer answer = getAnswerType(InputView.getContinueAnswer());
+            if (answer.equals(N)) {
+                break;
+            }
         }
     }
 
@@ -67,11 +73,11 @@ public class ConvenienceStoreController {
     private void checkConfirm(List<OrderProductStatus> confirmedStatuses, OrderProductStatus orderProductStatus) {
         OrderProductType type = orderProductStatus.getOrderProductType();
 
-        if (type.equals(DEFAULT)) {
+        if (type.equals(NOT_APPLIED) || type.equals(CANNOT_RECEIVE)) {
             confirmedStatuses.add(orderProductStatus);
             return;
         }
-        if (type.equals(ADDITIONAL_PROMOTION)) {
+        if (type.equals(CAN_RECEIVE)) {
             confirmAdditionalReceive(confirmedStatuses, orderProductStatus);
             return;
         }
@@ -93,7 +99,9 @@ public class ConvenienceStoreController {
         Answer answer = getAnswerType(InputView.confirmReceivePromotion(status));
         if (answer.equals(Y)) {
             int orderQuantity = status.getOrderQuantity();
-            status.setOrderQuantity(orderQuantity + status.getAdditionalReceiveCount());
+            int additionalReceiveCount = status.getAdditionalReceiveCount();
+            status.setOrderQuantity(orderQuantity + 1);
+            status.setAdditionalReceiveCount(additionalReceiveCount + 1);
         }
         statuses.add(status);
     }
@@ -109,10 +117,32 @@ public class ConvenienceStoreController {
         }
     }
 
-    private static void updatePartialPromotion(List<OrderProductStatus> statuses, OrderProductStatus status) {
+    private void updatePartialPromotion(List<OrderProductStatus> statuses, OrderProductStatus status) {
         Answer answer = getAnswerType(InputView.confirmPartialPromotion(status));
         if (answer.equals(Y)) {
             statuses.add(status);
         }
+    }
+
+    private void attemptMembershipDiscount(BillPaper billPaper) {
+        while (true) {
+            try {
+                confirmMembershipDiscount(billPaper);
+                return;
+            } catch (IllegalArgumentException e) {
+                OutputView.printError(e);
+            }
+        }
+    }
+
+    private void confirmMembershipDiscount(BillPaper billPaper) {
+        Answer answer = getAnswerType(InputView.confirmMembershipDiscount());
+        if (answer.equals(Y)) {
+            billPaper.applyMembershipDiscount();
+        }
+    }
+
+    private void printBillPaper(BillPaper billPaper) {
+        OutputView.printBillPaper(billPaper);
     }
 }

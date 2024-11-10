@@ -48,4 +48,5 @@ public class Promotion {
     public int getPromotionAppliedQuantity(int promotionStockQuantity) {
         return promotionStockQuantity / (buy + get) * (buy + get);
     }
+
 }

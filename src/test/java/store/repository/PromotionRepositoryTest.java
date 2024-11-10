@@ -29,8 +29,8 @@ class PromotionRepositoryTest {
         Promotion carbonatedDrinkTwoPlusOne = new Promotion("탄산2+1", 1, 2, startDateTime, endDateTime);
         Promotion mdRecommendedProduction = new Promotion("MD추천상품", 1, 2, startDateTime, endDateTime);
 
-        promotionRepository.save(carbonatedDrinkTwoPlusOne);
-        promotionRepository.save(mdRecommendedProduction);
+        promotionRepository.save(carbonatedDrinkTwoPlusOne.getName() ,carbonatedDrinkTwoPlusOne);
+        promotionRepository.save(mdRecommendedProduction.getName(), mdRecommendedProduction);
 
         assertThat(promotionRepository.contains(carbonatedDrinkTwoPlusOne)).isTrue();
         assertThat(promotionRepository.contains(mdRecommendedProduction)).isTrue();
@@ -42,7 +42,7 @@ class PromotionRepositoryTest {
     @ValueSource(strings = {"탄산2+1", "MD추천상품"})
     void findByName(String name) {
         Promotion promotion = new Promotion(name, 1, 2, startDateTime, endDateTime);
-        promotionRepository.save(promotion);
+        promotionRepository.save(name, promotion);
 
         Promotion findPromotion = promotionRepository.findByPromotionName(name);
 
@@ -56,8 +56,8 @@ class PromotionRepositoryTest {
         Promotion carbonatedDrinkTwoPlusOne = new Promotion("탄산2+1", 1, 2, startDateTime, endDateTime);
         Promotion mdRecommendedProduction = new Promotion("MD추천상품", 1, 2, startDateTime, endDateTime);
 
-        promotionRepository.save(carbonatedDrinkTwoPlusOne);
-        promotionRepository.save(mdRecommendedProduction);
+        promotionRepository.save(carbonatedDrinkTwoPlusOne.getName(), carbonatedDrinkTwoPlusOne);
+        promotionRepository.save(mdRecommendedProduction.getName(),mdRecommendedProduction);
 
         assertThatThrownBy(() -> promotionRepository.findByPromotionName(name))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -71,8 +71,8 @@ class PromotionRepositoryTest {
         Promotion carbonatedDrinkTwoPlusOne = new Promotion("탄산2+1", 1, 2, startDateTime, endDateTime);
         Promotion mdRecommendedProduction = new Promotion("MD추천상품", 1, 2, startDateTime, endDateTime);
 
-        promotionRepository.save(carbonatedDrinkTwoPlusOne);
-        promotionRepository.save(mdRecommendedProduction);
+        promotionRepository.save(carbonatedDrinkTwoPlusOne.getName(), carbonatedDrinkTwoPlusOne);
+        promotionRepository.save(mdRecommendedProduction.getName(),mdRecommendedProduction);
 
         assertThatThrownBy(() -> promotionRepository.findByPromotionName(name))
                 .isInstanceOf(IllegalArgumentException.class)

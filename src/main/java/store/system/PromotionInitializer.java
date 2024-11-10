@@ -22,6 +22,6 @@ public class PromotionInitializer {
         contents.stream()
                 .skip(COLUMN_INFO_LINE_NUMBER)
                 .map(PromotionFileParser::parseToPromotion)
-                .forEach(promotionRepository::save);
+                .forEach(promotion -> promotionRepository.save(promotion.getName(), promotion));
     }
 }

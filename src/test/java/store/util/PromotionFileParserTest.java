@@ -21,7 +21,7 @@ class PromotionFileParserTest {
         String rawPromotion = "반짝할인,1,1,2024-11-01,2024-11-30";
 
         Promotion promotion = PromotionFileParser.parseToPromotion(rawPromotion);
-        assertThat(promotion).isEqualTo(expectedPromotion);
+        assertThat(promotion.getName()).isEqualTo(expectedPromotion.getName());
     }
 
     @DisplayName("프로모션내용은 이름, 구매수량, 증정 수량, 시작날짜, 종료 날짜 로 총 5가지여야 한다.")

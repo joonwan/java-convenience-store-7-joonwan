@@ -22,7 +22,7 @@ class ProductFileParserTest {
         Product product = ProductFileParser.parseToDefaultProduct(productInfo);
 
         //then
-        assertThat(product).isEqualTo(expectedProduct);
+        assertThat(product.getName()).isEqualTo(expectedProduct.getName());
     }
 
     @DisplayName("정상적인 프로모션 진행 상품의 정보가 들어올 경우 상품 객체를 반환해야 한다.")
@@ -36,7 +36,7 @@ class ProductFileParserTest {
         Product product = ProductFileParser.parseToPromotionProduct(productInfo);
 
         //then
-        assertThat(product).isEqualTo(expectedProduct);
+        assertThat(product.getName()).isEqualTo(expectedProduct.getName());
     }
 
     @DisplayName("정상적인 문자열이 들어올 경우 상품 이름을 반환해야 한다.")

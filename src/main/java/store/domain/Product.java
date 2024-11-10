@@ -1,13 +1,14 @@
 package store.domain;
 
+import static store.domain.OrderProductType.*;
+
 import java.time.LocalDateTime;
-import java.util.Objects;
 import store.dto.StockStatus;
 
 public class Product {
 
-    private String name;
-    private int price;
+    private final String name;
+    private final int price;
     private int promotionStockQuantity;
     private int defaultStockQuantity;
     private Promotion promotion;
@@ -68,30 +69,6 @@ public class Product {
         return promotion != null && promotion.isAvailableApplyPromotion(orderDateTime);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Product product = (Product) o;
-        return price == product.price && Objects.equals(name, product.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, price);
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "name='" + name + '\'' +
-                '}';
-    }
-
     public boolean isAdditionalPromotion(int orderQuantity) {
         return promotion.isPossibleGiveMoreProduct(orderQuantity, promotionStockQuantity);
     }
@@ -104,5 +81,26 @@ public class Product {
         return orderQuantity - promotion.getPromotionAppliedQuantity(promotionStockQuantity);
     }
 
+    public void decreaseStockQuantityByType(OrderProductType type, int quantity) {
+        if (type.equals(NOT_APPLIED)) {
+            defaultStockQuantity -= quantity;
+            return;
+        }
+        if (type.equals(CAN_RECEIVE) || type.equals(CANNOT_RECEIVE)) {
+            promotionStockQuantity -= quantity;
+            return;
+        }
 
+        decreaseTotalQuantity(quantity);
+    }
+
+    private void decreaseTotalQuantity(int quantity) {
+        int diff = quantity - promotionStockQuantity;
+        promotionStockQuantity = 0;
+        defaultStockQuantity -= diff;
+    }
+
+    public long calculatePrice(int quantity) {
+        return (long) quantity * price;
+    }
 }

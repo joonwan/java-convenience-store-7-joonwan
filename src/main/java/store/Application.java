@@ -1,7 +1,10 @@
 package store;
 
+import store.controller.ConvenienceStoreController;
 import store.repository.ProductRepository;
 import store.repository.PromotionRepository;
+import store.service.OrderService;
+import store.service.ProductService;
 import store.system.ProductInitializer;
 import store.system.PromotionInitializer;
 
@@ -22,6 +25,11 @@ public class Application {
                 PRODUCT_FILE_PATH);
 
         productInitializer.initializeProduct();
+
+        ConvenienceStoreController convenienceStoreController = new ConvenienceStoreController(
+                                                                new ProductService(productRepository),
+                                                                new OrderService(productRepository));
+        convenienceStoreController.run();
 
     }
 }
