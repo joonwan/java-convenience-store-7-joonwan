@@ -1,5 +1,8 @@
 package store.domain;
 
+import static store.constants.DiscountConst.MAX_MEMBERSHIP_DISCOUNT_PRICE;
+import static store.constants.DiscountConst.MEMBERSHIP_PROMOTION_DISCOUNT_RATE;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -41,9 +44,9 @@ public class BillPaper {
 
     public void applyMembershipDiscount() {
         double sum = getNotPromotionAppliedTotalPrice();
-        membershipDiscountPrice = Double.valueOf(sum * 0.3).longValue();
-        if (membershipDiscountPrice > 8000) {
-            membershipDiscountPrice = 8000;
+        membershipDiscountPrice = Double.valueOf(sum * MEMBERSHIP_PROMOTION_DISCOUNT_RATE).longValue();
+        if (membershipDiscountPrice > MAX_MEMBERSHIP_DISCOUNT_PRICE) {
+            membershipDiscountPrice = MAX_MEMBERSHIP_DISCOUNT_PRICE;
         }
     }
 
@@ -58,7 +61,7 @@ public class BillPaper {
     private double getNotPromotionAppliedTotalPrice() {
         double sum = 0;
         for (Product product : totalOrderProducts.keySet()) {
-            if (additionalReceiveProducts.get(product) != 0) {
+            if (isPromotionAppliedOrderProduct(product)) {
                 continue;
             }
             int quantity = totalOrderProducts.get(product);
@@ -66,6 +69,10 @@ public class BillPaper {
             sum += price;
         }
         return sum;
+    }
+
+    private boolean isPromotionAppliedOrderProduct(Product product) {
+        return additionalReceiveProducts.get(product) != 0;
     }
 
 }
