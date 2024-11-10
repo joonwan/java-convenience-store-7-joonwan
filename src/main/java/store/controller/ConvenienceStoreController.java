@@ -29,12 +29,10 @@ public class ConvenienceStoreController {
 
     public void run() {
         while (true) {
-            printStartMessage();
+            printStockQuantityMessage();
             Order order = createOrder();
             List<OrderProductStatus> confirmedOrderProductStatuses = applyUserConfirm(order);
-            BillPaper billPaper = orderService.getBillPaper(confirmedOrderProductStatuses);
-            attemptMembershipDiscount(billPaper);
-            printBillPaper(billPaper);
+            attemptPayment(confirmedOrderProductStatuses);
             Answer retryAnswer = getRetryAnswer();
             if (retryAnswer.equals(N)) {
                 break;
@@ -42,17 +40,7 @@ public class ConvenienceStoreController {
         }
     }
 
-    private static Answer getRetryAnswer() {
-        while (true) {
-            try {
-                return getAnswerType(InputView.getContinueAnswer());
-            } catch (IllegalArgumentException e) {
-                OutputView.printError(e);
-            }
-        }
-    }
-
-    private void printStartMessage() {
+    private void printStockQuantityMessage() {
         OutputView.printWelcomeMessage();
         printProductsStockStatus();
     }
@@ -111,10 +99,14 @@ public class ConvenienceStoreController {
         if (answer.equals(Y)) {
             int orderQuantity = status.getOrderQuantity();
             int additionalReceiveCount = status.getAdditionalReceiveCount();
-            status.setOrderQuantity(orderQuantity + 1);
-            status.setAdditionalReceiveCount(additionalReceiveCount + 1);
+            addPromotionStock(status, orderQuantity, additionalReceiveCount);
         }
         statuses.add(status);
+    }
+
+    private static void addPromotionStock(OrderProductStatus status, int orderQuantity, int additionalReceiveCount) {
+        status.setOrderQuantity(orderQuantity + 1);
+        status.setAdditionalReceiveCount(additionalReceiveCount + 1);
     }
 
     private void confirmPartialPromotion(List<OrderProductStatus> statuses, OrderProductStatus status) {
@@ -132,6 +124,14 @@ public class ConvenienceStoreController {
         Answer answer = getAnswerType(InputView.confirmPartialPromotion(status));
         if (answer.equals(Y)) {
             statuses.add(status);
+        }
+    }
+
+    private void attemptPayment(List<OrderProductStatus> confirmedOrderProductStatuses) {
+        if (!confirmedOrderProductStatuses.isEmpty()) {
+            BillPaper billPaper = orderService.getBillPaper(confirmedOrderProductStatuses);
+            attemptMembershipDiscount(billPaper);
+            printBillPaper(billPaper);
         }
     }
 
@@ -156,4 +156,15 @@ public class ConvenienceStoreController {
     private void printBillPaper(BillPaper billPaper) {
         OutputView.printBillPaper(billPaper);
     }
+
+    private static Answer getRetryAnswer() {
+        while (true) {
+            try {
+                return getAnswerType(InputView.getContinueAnswer());
+            } catch (IllegalArgumentException e) {
+                OutputView.printError(e);
+            }
+        }
+    }
+
 }
