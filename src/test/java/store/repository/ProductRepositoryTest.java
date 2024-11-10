@@ -94,7 +94,7 @@ class ProductRepositoryTest {
 
         assertThatThrownBy(() -> productRepository.findByName(name))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 이름을 가진 상품이 존재하지 않습니다.");
+                .hasMessage("해당 이름을 가진 상품이 존재하지 않습니다. 다시 입해 주세요.");
     }
 
     @DisplayName("이름으로 상품을 찾을 때 이름에 null 이 들어올 수 없다.")

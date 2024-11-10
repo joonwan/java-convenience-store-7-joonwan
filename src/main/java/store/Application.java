@@ -5,31 +5,27 @@ import store.repository.ProductRepository;
 import store.repository.PromotionRepository;
 import store.service.OrderService;
 import store.service.ProductService;
-import store.system.ProductInitializer;
-import store.system.PromotionInitializer;
+import store.system.ResourceManager;
 
 public class Application {
 
-    private static final String PROMOTION_FILE_PATH = "src/test/resources/promotions.md";
-    private static final String PRODUCT_FILE_PATH = "src/main/resources/products.md";
-
     public static void main(String[] args) {
-
         PromotionRepository promotionRepository = new PromotionRepository();
-        PromotionInitializer promotionInitializer = new PromotionInitializer(promotionRepository, PROMOTION_FILE_PATH);
-
-        promotionInitializer.initializePromotion();
-
         ProductRepository productRepository = new ProductRepository();
-        ProductInitializer productInitializer = new ProductInitializer(productRepository, promotionRepository,
-                PRODUCT_FILE_PATH);
 
-        productInitializer.initializeProduct();
+        loadFile(promotionRepository, productRepository);
 
         ConvenienceStoreController convenienceStoreController = new ConvenienceStoreController(
                                                                 new ProductService(productRepository),
                                                                 new OrderService(productRepository));
+
         convenienceStoreController.run();
+    }
+
+    private static void loadFile(PromotionRepository promotionRepository, ProductRepository productRepository) {
+
+        ResourceManager resourceManager = new ResourceManager(promotionRepository, productRepository);
+        resourceManager.loadFile();
 
     }
 }

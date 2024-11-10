@@ -58,7 +58,7 @@ class OrderProductTest {
 
         assertThatThrownBy(() -> new OrderProduct(product, orderQuantity, DateTimes.now()))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("주문 수량 입력시 양수만 입력할 수 있습니다.");
+                .hasMessage("주문 수량 입력시 양수만 입력할 수 있습니다. 다시 입력해 주세요.");
 
     }
 

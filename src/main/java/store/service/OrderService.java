@@ -1,6 +1,6 @@
 package store.service;
 
-import static store.domain.OrderProductType.*;
+import static store.errormessage.OrderServiceErrorMessage.INVALID_ORDER_QUANTITY_TYPE_ERROR_MESSAGE;
 
 import camp.nextstep.edu.missionutils.DateTimes;
 import java.util.ArrayList;
@@ -18,6 +18,11 @@ import store.util.validator.OrderInputValidator;
 
 public class OrderService {
 
+    private static final String PRODUCT_SEPARATOR = ",";
+    private static final String PRODUCT_COMPONENT_SEPARATOR = "-";
+    private static final int PRODUCT_NAME_INDEX = 0;
+    private static final int ORDER_QUANTITY_INDEX = 1;
+
     private final ProductRepository productRepository;
 
     public OrderService(ProductRepository productRepository) {
@@ -32,10 +37,20 @@ public class OrderService {
         return new Order(orderProducts);
     }
 
+    public BillPaper getBillPaper(List<OrderProductStatus> confirmedOrderProductStatuses) {
+        BillPaper billPaper = new BillPaper();
+
+        for (OrderProductStatus orderProductStatus : confirmedOrderProductStatuses) {
+            decreaseStockQuantity(orderProductStatus);
+            updateBillPaper(billPaper, orderProductStatus);
+        }
+        return billPaper;
+    }
+
     private Map<String, Integer> parseItems(String items) {
         Map<String, Integer> parsedItems = new LinkedHashMap<>();
 
-        for(String item : items.split(",")) {
+        for(String item : items.split(PRODUCT_SEPARATOR)) {
             String productName = getProductName(item);
             int orderQuantity = getOrderQuantity(item);
 
@@ -45,27 +60,26 @@ public class OrderService {
     }
 
     private String getProductName(String item) {
-        String[] itemComponents = item.split("-");
-        return itemComponents[0].trim().substring(1);
+        String[] itemComponents = item.split(PRODUCT_COMPONENT_SEPARATOR);
+        return itemComponents[PRODUCT_NAME_INDEX].trim().substring(1);
     }
 
     private int getOrderQuantity(String item) {
         try {
-            String[] itemComponents = item.split("-");
-            String rawOrderQuantity = itemComponents[1].trim();
+            String[] itemComponents = item.split(PRODUCT_COMPONENT_SEPARATOR);
+            String rawOrderQuantity = itemComponents[ORDER_QUANTITY_INDEX].trim();
             int startIndex = 0;
             int endIndex = rawOrderQuantity.length() - 1;
 
             return Integer.parseInt(rawOrderQuantity.substring(startIndex, endIndex));
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("주문 수량은 정수만 입력할 수 있습니다.");
+            throw new IllegalArgumentException(INVALID_ORDER_QUANTITY_TYPE_ERROR_MESSAGE);
         }
     }
 
     private void updateParsedItems(Map<String, Integer> parsedItems, String productName, int orderQuantity) {
         if (parsedItems.containsKey(productName)) {
             int findOrderQuantity = parsedItems.get(productName);
-
             parsedItems.put(productName, findOrderQuantity + orderQuantity);
             return ;
         }
@@ -81,16 +95,6 @@ public class OrderService {
             orderProducts.add(new OrderProduct(product, orderQuantity, DateTimes.now()));
         }
         return orderProducts;
-    }
-
-    public BillPaper getBillPaper(List<OrderProductStatus> confirmedOrderProductStatuses) {
-        BillPaper billPaper = new BillPaper();
-
-        for (OrderProductStatus orderProductStatus : confirmedOrderProductStatuses) {
-            decreaseStockQuantity(orderProductStatus);
-            updateBillPaper(billPaper, orderProductStatus);
-        }
-        return billPaper;
     }
 
     private void decreaseStockQuantity(OrderProductStatus orderProductStatus) {

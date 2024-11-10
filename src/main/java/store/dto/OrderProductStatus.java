@@ -47,14 +47,4 @@ public class OrderProductStatus {
         this.additionalReceiveCount = quantity;
     }
 
-    @Override
-    public String toString() {
-        return "OrderProductStatus{" +
-                "productName='" + productName + '\'' +
-                ", orderQuantity=" + orderQuantity +
-                ", orderProductType=" + orderProductType +
-                ", additionalReceiveCount=" + additionalReceiveCount +
-                ", notApplicableProductCount=" + notApplicableProductCount +
-                '}';
-    }
 }

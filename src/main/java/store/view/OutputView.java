@@ -1,6 +1,13 @@
 package store.view;
 
-import java.text.DecimalFormat;
+import static store.viewmessage.OutputViewMessage.ENOUGH_DEFAULT_STOCK_QUANTITY_FORMAT;
+import static store.viewmessage.OutputViewMessage.ENOUGH_PROMOTION_STOCK_QUANTITY_FORMAT;
+import static store.viewmessage.OutputViewMessage.ERROR_PREFIX;
+import static store.viewmessage.OutputViewMessage.NOT_ENOUGH_DEFAULT_STOCK_QUANTITY_FORMAT;
+import static store.viewmessage.OutputViewMessage.NOT_ENOUGH_PROMOTION_STOCK_QUANTITY_FORMAT;
+import static store.viewmessage.OutputViewMessage.STOCK_STATUS_MESSAGE;
+import static store.viewmessage.OutputViewMessage.WELCOME_MESSAGE;
+
 import java.util.List;
 import java.util.Map;
 import store.domain.BillPaper;
@@ -10,7 +17,7 @@ import store.dto.StockStatus;
 public class OutputView {
 
     public static void printWelcomeMessage() {
-        System.out.println("\n안녕하세요. W편의점입니다.");
+        System.out.println(WELCOME_MESSAGE);
     }
 
     public static void printStockStatuses(List<StockStatus> stockStatuses) {
@@ -20,11 +27,11 @@ public class OutputView {
     }
 
     public static void printError(IllegalArgumentException exception) {
-        System.out.println("[ERROR] " + exception.getMessage());
+        System.out.println(ERROR_PREFIX + exception.getMessage());
     }
 
     private static void printStockStatusMessage() {
-        System.out.println("현재 보유하고 있는 상품입니다.\n");
+        System.out.println(STOCK_STATUS_MESSAGE);
     }
 
     private static void printStockStatus(StockStatus stockStatus) {
@@ -45,10 +52,10 @@ public class OutputView {
         String promotionName = stockStatus.getPromotionName();
 
         if (promotionStock > 0) {
-            System.out.printf("- %s %,d원 %,d개 %s\n", productName, price, promotionStock, promotionName);
+            System.out.printf(ENOUGH_PROMOTION_STOCK_QUANTITY_FORMAT, productName, price, promotionStock, promotionName);
             return;
         }
-        System.out.printf("- %s %,d원 재고 없음 %s\n", productName, price, promotionName);
+        System.out.printf(NOT_ENOUGH_PROMOTION_STOCK_QUANTITY_FORMAT, productName, price, promotionName);
     }
 
     private static void printDefaultStockQuantity(StockStatus stockStatus) {
@@ -57,10 +64,10 @@ public class OutputView {
         int defaultStockQuantity = stockStatus.getDefaultStockQuantity();
 
         if (defaultStockQuantity > 0) {
-            System.out.printf("- %s %,d원 %,d개\n", productName, price, defaultStockQuantity);
+            System.out.printf(ENOUGH_DEFAULT_STOCK_QUANTITY_FORMAT, productName, price, defaultStockQuantity);
             return;
         }
-        System.out.printf("- %s %,d원 재고 없음\n", productName, price);
+        System.out.printf(NOT_ENOUGH_DEFAULT_STOCK_QUANTITY_FORMAT, productName, price);
     }
 
     public static void printBillPaper(BillPaper billPaper) {

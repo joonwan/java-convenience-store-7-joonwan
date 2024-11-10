@@ -1,6 +1,8 @@
 package store.domain;
 
 import static store.domain.OrderProductType.*;
+import static store.errormessage.OrderErrorMessage.NEGATIVE_ORDER_QUANTITY_ERROR_MESSAGE;
+import static store.errormessage.OrderErrorMessage.NOT_ENOUGH_STOCK_QUANTITY_ERROR_MESSAGE;
 
 import java.time.LocalDateTime;
 import store.dto.OrderProductStatus;
@@ -61,13 +63,13 @@ public class OrderProduct {
 
     private void validatePositiveQuantity(int quantity) {
         if (quantity <= 0) {
-            throw new IllegalArgumentException("주문 수량 입력시 양수만 입력할 수 있습니다.");
+            throw new IllegalArgumentException(NEGATIVE_ORDER_QUANTITY_ERROR_MESSAGE);
         }
     }
 
     private void validateEnoughQuantity(Product product, int quantity, LocalDateTime orderDateTime) {
         if (!product.isEnoughStockQuantity(quantity, orderDateTime)) {
-            throw new IllegalArgumentException("재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(NOT_ENOUGH_STOCK_QUANTITY_ERROR_MESSAGE);
         }
     }
 

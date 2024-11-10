@@ -1,5 +1,10 @@
 package store.system;
 
+import static store.constants.FileInitializeConst.COLUMN_INFO_LINE_NUMBER;
+import static store.constants.FileInitializeConst.NULL;
+import static store.constants.FileInitializeConst.REGEX;
+import static store.constants.FileInitializeConst.VALID_PRODUCT_COLUMN_NUMBER;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import store.domain.Product;
@@ -7,7 +12,7 @@ import store.domain.Promotion;
 import store.file.FileContentReader;
 import store.repository.ProductRepository;
 import store.repository.PromotionRepository;
-import store.util.ProductFileParser;
+import store.util.parser.ProductFileParser;
 
 public class ProductInitializer {
 
@@ -23,11 +28,10 @@ public class ProductInitializer {
     }
 
     public void initializeProduct() {
-        List<String> contents = getFileContents();
-        List<String> skipContents = skipColumnInfoLine(contents);
+        List<String> fileContents = getFileContents();
+        List<String> skipContents = skipColumnInfoLine(fileContents);
 
         validateEachContentsSize(skipContents);
-
         saveToRepository(skipContents);
     }
 
@@ -38,20 +42,24 @@ public class ProductInitializer {
 
     private static List<String> skipColumnInfoLine(List<String> contents) {
         return contents.stream()
-                .skip(1)
+                .skip(COLUMN_INFO_LINE_NUMBER)
                 .collect(Collectors.toList());
     }
 
     public void validateEachContentsSize(List<String> contents) {
         contents.stream()
-                .map(content -> content.split(","))
+                .map(content -> content.split(REGEX))
                 .forEach(content -> validateSize(content));
     }
 
     private void validateSize(String[] productionComponent) {
-        if (productionComponent.length != 4) {
+        if (!isValidContentsSize(productionComponent)) {
             throw new IllegalArgumentException();
         }
+    }
+
+    private static boolean isValidContentsSize(String[] productionComponent) {
+        return productionComponent.length == VALID_PRODUCT_COLUMN_NUMBER;
     }
 
     private void saveToRepository(List<String> contents) {
@@ -66,7 +74,7 @@ public class ProductInitializer {
 
     private boolean isDefaultProductContent(String content) {
         String promotionName = ProductFileParser.getPromotionName(content);
-        return promotionName.equals("null");
+        return promotionName.equals(NULL);
     }
 
     private void persistDefaultProduct(String content) {
@@ -77,6 +85,7 @@ public class ProductInitializer {
             findProduct.increaseDefaultQuantity(defaultQuantity);
             return;
         }
+
         Product product = ProductFileParser.parseToDefaultProduct(content);
         productRepository.save(productName, product);
     }
@@ -84,16 +93,25 @@ public class ProductInitializer {
     private void persistPromotionProduct(String content) {
         String productName = ProductFileParser.getProductName(content);
         if (productRepository.containsName(productName)) {
-            Product findProduct = productRepository.findByName(productName);
-            int promotionQuantity = ProductFileParser.getQuantity(content);
-            findProduct.increasePromotionQuantity(promotionQuantity);
+            updateProductStockQuantity(content, productName);
             return;
         }
+
         Product product = ProductFileParser.parseToPromotionProduct(content);
-        String promotionName = ProductFileParser.getPromotionName(content);
-        Promotion promotion = promotionRepository.findByPromotionName(promotionName);
+        Promotion promotion = findPromotionByName(content);
         product.registerPromotion(promotion);
         productRepository.save(productName, product);
+    }
+
+    private void updateProductStockQuantity(String productName, String content) {
+        Product findProduct = productRepository.findByName(productName);
+        int promotionQuantity = ProductFileParser.getQuantity(content);
+        findProduct.increasePromotionQuantity(promotionQuantity);
+    }
+
+    private Promotion findPromotionByName(String content) {
+        String promotionName = ProductFileParser.getPromotionName(content);
+        return promotionRepository.findByPromotionName(promotionName);
     }
 
 }

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import store.domain.Product;
+import store.util.parser.ProductFileParser;
 
 class ProductFileParserTest {
 
@@ -95,6 +96,6 @@ class ProductFileParserTest {
     void invalidPrice(String productInfo) {
         assertThatThrownBy(() -> ProductFileParser.parseToDefaultProduct(productInfo))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("가격은 숫자만 입력할 수 있습니다.");
+                .hasMessage("가격은 숫자만 파일에 입력할 수 있습니다.");
     }
 }

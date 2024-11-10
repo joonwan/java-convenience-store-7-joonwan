@@ -1,5 +1,9 @@
 package store.file;
 
+import static store.errormessage.FileReadErrorMessage.NOT_FOUND_FILE_ERROR_MESSAGE;
+import static store.errormessage.FileReadErrorMessage.NULL_PATH_ERROR_MESSAGE;
+import static store.errormessage.FileReadErrorMessage.READ_FILE_ERROR_MESSAGE;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -18,23 +22,29 @@ public class FileContentReader {
 
     public List<String> readContents (){
         try {
-            List<String> contents = new ArrayList<>();
             BufferedReader bf = new BufferedReader(new FileReader(filePath));
-            String line = "";
-            while ((line = bf.readLine()) != null) {
-                contents.add(line);
-            }
-            return contents;
+            return readFile(bf);
         } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException("해당 경로 또는 파일이 존재하지 않습니다.");
+            throw new IllegalArgumentException(NOT_FOUND_FILE_ERROR_MESSAGE);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(READ_FILE_ERROR_MESSAGE);
         }
+    }
+
+    private static List<String> readFile(BufferedReader bf) throws IOException {
+        List<String> contents = new ArrayList<>();
+        String line = "";
+
+        while ((line = bf.readLine()) != null) {
+            contents.add(line);
+        }
+
+        return contents;
     }
 
     private void validateNotNull(String filePath) {
         if (filePath == null) {
-            throw new IllegalArgumentException("파일 경로 입력시 null 값을 입력할수 없습니다.");
+            throw new IllegalArgumentException(NULL_PATH_ERROR_MESSAGE);
         }
     }
 }

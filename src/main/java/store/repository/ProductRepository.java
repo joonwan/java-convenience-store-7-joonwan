@@ -1,6 +1,9 @@
 package store.repository;
 
-import java.util.ArrayList;
+import static store.errormessage.ProductRepositoryErrorMessage.DUPLICATED_PRODUCT_NAME_ERROR_MESSAGE;
+import static store.errormessage.ProductRepositoryErrorMessage.FIND_BY_NULL_ERROR_MESSAGE;
+import static store.errormessage.ProductRepositoryErrorMessage.NOT_FOUND_PRODUCT_ERROR_MESSAGE;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +31,7 @@ public class ProductRepository {
 
         Product product = store.get(name);
         if (product == null)
-            throw new IllegalArgumentException("해당 이름을 가진 상품이 존재하지 않습니다.");
+            throw new IllegalArgumentException(NOT_FOUND_PRODUCT_ERROR_MESSAGE);
 
         return product;
     }
@@ -47,13 +50,13 @@ public class ProductRepository {
 
     private void validateNotDuplicatedKey(String name) {
         if (store.containsKey(name)) {
-            throw new IllegalArgumentException("이미 존재하는 상품입니다.");
+            throw new IllegalArgumentException(DUPLICATED_PRODUCT_NAME_ERROR_MESSAGE);
         }
     }
 
     private void validateNotNull(String name) {
         if (name == null) {
-            throw new IllegalArgumentException("이름으로 상품을 찾을 때 null 을 전달할 수 없습니다.");
+            throw new IllegalArgumentException(FIND_BY_NULL_ERROR_MESSAGE);
         }
     }
 }

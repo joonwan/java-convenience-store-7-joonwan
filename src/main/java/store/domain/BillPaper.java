@@ -47,6 +47,14 @@ public class BillPaper {
         }
     }
 
+    public int getTotalOrderCount() {
+        int total = 0;
+        for (Product product : totalOrderProducts.keySet()) {
+            total += totalOrderProducts.get(product);
+        }
+        return total;
+    }
+
     private double getNotPromotionAppliedTotalPrice() {
         double sum = 0;
         for (Product product : totalOrderProducts.keySet()) {
@@ -60,11 +68,4 @@ public class BillPaper {
         return sum;
     }
 
-    public int getTotalOrderCount() {
-        int total = 0;
-        for (Product product : totalOrderProducts.keySet()) {
-            total += totalOrderProducts.get(product);
-        }
-        return total;
-    }
 }

@@ -1,12 +1,12 @@
 package store.controller;
 
-import static store.domain.Answer.*;
-import static store.domain.Answer.getAnswerType;
+import static store.domain.UserAnswer.*;
+import static store.domain.UserAnswer.getAnswerType;
 import static store.domain.OrderProductType.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import store.domain.Answer;
+import store.domain.UserAnswer;
 import store.domain.BillPaper;
 import store.domain.Order;
 import store.domain.OrderProductType;
@@ -29,18 +29,18 @@ public class ConvenienceStoreController {
 
     public void run() {
         while (true) {
-            printStockQuantityMessage();
-            Order order = createOrder();
-            List<OrderProductStatus> confirmedOrderProductStatuses = applyUserConfirm(order);
-            attemptPayment(confirmedOrderProductStatuses);
-            Answer retryAnswer = getRetryAnswer();
+            printStockQuantity();
+            Order order = getOrder();
+            List<OrderProductStatus> finalOrderStatus = applyUserConfirm(order);
+            attemptPrintBillPaper(finalOrderStatus);
+            UserAnswer retryAnswer = getRetryAnswer();
             if (retryAnswer.equals(N)) {
                 break;
             }
         }
     }
 
-    private void printStockQuantityMessage() {
+    private void printStockQuantity() {
         OutputView.printWelcomeMessage();
         printProductsStockStatus();
     }
@@ -50,7 +50,7 @@ public class ConvenienceStoreController {
         OutputView.printStockStatuses(productsStockStatus);
     }
 
-    private Order createOrder() {
+    private Order getOrder() {
         while (true) {
             try {
                 String items = InputView.readItem();
@@ -64,12 +64,12 @@ public class ConvenienceStoreController {
     private List<OrderProductStatus> applyUserConfirm(Order order) {
         List<OrderProductStatus> confirmedOrderProductStatues = new ArrayList<>();
         for (OrderProductStatus orderProductStatus : order.getOrderProductStatuses()) {
-            checkConfirm(confirmedOrderProductStatues, orderProductStatus);
+            confirmToUser(confirmedOrderProductStatues, orderProductStatus);
         }
         return confirmedOrderProductStatues;
     }
 
-    private void checkConfirm(List<OrderProductStatus> confirmedStatuses, OrderProductStatus orderProductStatus) {
+    private void confirmToUser(List<OrderProductStatus> confirmedStatuses, OrderProductStatus orderProductStatus) {
         OrderProductType type = orderProductStatus.getOrderProductType();
         if (type.equals(NOT_APPLIED) || type.equals(CANNOT_RECEIVE)) {
             confirmedStatuses.add(orderProductStatus);
@@ -94,7 +94,7 @@ public class ConvenienceStoreController {
     }
 
     private static void updateAdditionalReceive(List<OrderProductStatus> statuses, OrderProductStatus status) {
-        Answer answer = getAnswerType(InputView.confirmReceivePromotion(status));
+        UserAnswer answer = getAnswerType(InputView.getAdditionalProductAnswer(status));
         if (answer.equals(Y)) {
             int orderQuantity = status.getOrderQuantity();
             int additionalReceiveCount = status.getAdditionalReceiveCount();
@@ -120,13 +120,13 @@ public class ConvenienceStoreController {
     }
 
     private void updatePartialPromotion(List<OrderProductStatus> statuses, OrderProductStatus status) {
-        Answer answer = getAnswerType(InputView.confirmPartialPromotion(status));
+        UserAnswer answer = getAnswerType(InputView.getPartialPromotionAnswer(status));
         if (answer.equals(Y)) {
             statuses.add(status);
         }
     }
 
-    private void attemptPayment(List<OrderProductStatus> confirmedOrderProductStatuses) {
+    private void attemptPrintBillPaper(List<OrderProductStatus> confirmedOrderProductStatuses) {
         if (!confirmedOrderProductStatuses.isEmpty()) {
             BillPaper billPaper = orderService.getBillPaper(confirmedOrderProductStatuses);
             attemptMembershipDiscount(billPaper);
@@ -146,7 +146,7 @@ public class ConvenienceStoreController {
     }
 
     private void confirmMembershipDiscount(BillPaper billPaper) {
-        Answer answer = getAnswerType(InputView.confirmMembershipDiscount());
+        UserAnswer answer = getAnswerType(InputView.getMembershipDiscountAnswer());
         if (answer.equals(Y)) {
             billPaper.applyMembershipDiscount();
         }
@@ -156,7 +156,7 @@ public class ConvenienceStoreController {
         OutputView.printBillPaper(billPaper);
     }
 
-    private static Answer getRetryAnswer() {
+    private static UserAnswer getRetryAnswer() {
         while (true) {
             try {
                 return getAnswerType(InputView.getContinueAnswer());

@@ -1,13 +1,14 @@
 package store.system;
 
+import static store.constants.FileInitializeConst.COLUMN_INFO_LINE_NUMBER;
+
 import java.util.List;
 import store.file.FileContentReader;
 import store.repository.PromotionRepository;
-import store.util.PromotionFileParser;
+import store.util.parser.PromotionFileParser;
 
 public class PromotionInitializer {
 
-    private final long COLUMN_INFO_LINE_NUMBER = 1;
     private final PromotionRepository promotionRepository;
     private final String promotionFilePath;
 

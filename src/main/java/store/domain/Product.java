@@ -24,10 +24,6 @@ public class Product {
         return name;
     }
 
-    public boolean hasPromotion() {
-        return promotion != null;
-    }
-
     public void increasePromotionQuantity(int amount) {
         this.promotionStockQuantity += amount;
     }
@@ -94,13 +90,13 @@ public class Product {
         decreaseTotalQuantity(quantity);
     }
 
+    public long calculatePrice(int quantity) {
+        return (long) quantity * price;
+    }
+
     private void decreaseTotalQuantity(int quantity) {
         int diff = quantity - promotionStockQuantity;
         promotionStockQuantity = 0;
         defaultStockQuantity -= diff;
-    }
-
-    public long calculatePrice(int quantity) {
-        return (long) quantity * price;
     }
 }

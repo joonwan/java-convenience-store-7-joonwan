@@ -1,5 +1,8 @@
 package store.repository;
 
+import static store.errormessage.PromotionRepositoryErrorMessage.FIND_BY_NULL_ERROR_MESSAGE;
+import static store.errormessage.PromotionRepositoryErrorMessage.NOT_FOUND_PROMOTION_ERROR_MESSAGE;
+
 import java.util.HashMap;
 import java.util.Map;
 import store.domain.Promotion;
@@ -17,10 +20,9 @@ public class PromotionRepository {
 
         Promotion findPromotion = store.get(name);
         if (findPromotion == null) {
-            throw new IllegalArgumentException("해당 이름을 가진 프로모션이 존재하지 않습니다.");
+            throw new IllegalArgumentException(NOT_FOUND_PROMOTION_ERROR_MESSAGE);
         }
         return findPromotion;
-
     }
 
     public int size() {
@@ -37,7 +39,7 @@ public class PromotionRepository {
 
     private void validateNotNull(String name) {
         if (name == null) {
-            throw new IllegalArgumentException("프로모션을 이름으로 검색할 때 null 을 입력할 수 없습니다.");
+            throw new IllegalArgumentException(FIND_BY_NULL_ERROR_MESSAGE);
         }
     }
 

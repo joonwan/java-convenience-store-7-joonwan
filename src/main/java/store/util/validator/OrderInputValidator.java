@@ -1,11 +1,20 @@
 package store.util.validator;
 
+import static store.constants.OrderInputConstants.PREFIX;
+import static store.constants.OrderInputConstants.REGEX;
+import static store.constants.OrderInputConstants.SEPARATOR;
+import static store.constants.OrderInputConstants.SUFFIX;
+import static store.errormessage.OrderInputErrorMessage.EMPTY_STRING_ERROR_MESSAGE;
+import static store.errormessage.OrderInputErrorMessage.INVALID_SEPARATOR_COUNT_ERROR_MESSAGE;
+import static store.errormessage.OrderInputErrorMessage.INVALID_SEPARATOR_ERROR_MESSAGE;
+import static store.errormessage.OrderInputErrorMessage.INVALID_SQUARE_BRACKETS_ERROR_MESSAGE;
+
 public class OrderInputValidator {
 
     public static void validateItemFormat(String items) {
         validateNotEmptyString(items);
 
-        for (String item : items.split(",")) {
+        for (String item : items.split(REGEX)) {
             String trimmedItem = item.trim();
             validateSquareBrackets(trimmedItem);
             validateContainSeparator(trimmedItem);
@@ -15,35 +24,35 @@ public class OrderInputValidator {
 
     private static void validateNotEmptyString(String items) {
         if (items.isBlank()) {
-            throw new IllegalArgumentException("주문을 입력할 때 빈 문자열을 입력할 수 없습니다.");
+            throw new IllegalArgumentException(EMPTY_STRING_ERROR_MESSAGE);
         }
     }
 
     private static void validateSquareBrackets(String item) {
         if (!isSurroundedBySquareBrackets(item)) {
-            throw new IllegalArgumentException("주문 상품과 수량은 [ ] 사이에 있어야 합니다.");
+            throw new IllegalArgumentException(INVALID_SQUARE_BRACKETS_ERROR_MESSAGE);
         }
     }
 
     private static boolean isSurroundedBySquareBrackets(String item) {
-        return item.startsWith("[") && item.endsWith("]");
+        return item.startsWith(PREFIX) && item.endsWith(SUFFIX);
     }
 
     private static void validateContainSeparator(String item) {
-        if (!item.contains("-")) {
-            throw new IllegalArgumentException("주문상품과 수량을 - 로 구분해서 입력해야 합니다.");
+        if (!item.contains(SEPARATOR)) {
+            throw new IllegalArgumentException(INVALID_SEPARATOR_ERROR_MESSAGE);
         }
     }
 
     private static void validateSeparatorOnce(String item) {
         int separatorCount = 0;
         for (int i = 0; i < item.length(); i++) {
-            if (item.charAt(i) == '-') {
+            if (item.charAt(i) == SEPARATOR.charAt(0)) {
                 separatorCount++;
             }
         }
         if (separatorCount != 1) {
-            throw new IllegalArgumentException("주문 상품과 수량을 구분할 때 - 는 한번만 입력할 수 있습니다.");
+            throw new IllegalArgumentException(INVALID_SEPARATOR_COUNT_ERROR_MESSAGE);
         }
     }
 }

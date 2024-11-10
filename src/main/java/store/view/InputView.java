@@ -1,39 +1,41 @@
 package store.view;
 
+import static store.viewmessage.RequestMessage.*;
+
 import camp.nextstep.edu.missionutils.Console;
 import store.dto.OrderProductStatus;
 
 public class InputView {
 
     public static String readItem() {
-        System.out.println("\n구매하실 상품명과 수량을 입력해 주세요. (예: [사이다-2],[감자칩-1])");
+        System.out.println(READ_ITEM_REQUEST_MESSAGE);
         return Console.readLine();
     }
 
-    public static String confirmReceivePromotion(OrderProductStatus orderProductStatus) {
+    public static String getAdditionalProductAnswer(OrderProductStatus orderProductStatus) {
         String name = orderProductStatus.getProductName();
-        String message = String.format("\n현재 %s은(는) 1개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)", name);
+        String message = String.format(ADDITIONAL_PRODUCT_REQUEST_MESSAGE, name);
         System.out.println(message);
 
         return Console.readLine();
     }
 
-    public static String confirmPartialPromotion(OrderProductStatus orderProductStatus) {
+    public static String getPartialPromotionAnswer(OrderProductStatus orderProductStatus) {
         String name = orderProductStatus.getProductName();
         int count = orderProductStatus.getNotApplicableProductCount();
 
-        String message = String.format("\n현재 %s %d개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)", name, count);
+        String message = String.format(PARTIAL_PROMOTION_CONFIRM_REQUEST_MESSAGE, name, count);
         System.out.println(message);
         return Console.readLine();
     }
 
-    public static String confirmMembershipDiscount() {
-        System.out.println("\n멤버십 할인을 받으시겠습니까? (Y/N)");
+    public static String getMembershipDiscountAnswer() {
+        System.out.println(MEMBERSHIP_DISCOUNT_REQUEST_MESSAGE);
         return Console.readLine();
     }
 
     public static String getContinueAnswer() {
-        System.out.println("\n감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)");
+        System.out.println(CONTINUE_PROGRAM_REQUEST_MESSAGE);
         return Console.readLine();
     }
 }
