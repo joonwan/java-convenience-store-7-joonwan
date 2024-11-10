@@ -10,7 +10,8 @@ public class OrderProductStatus {
     private int additionalReceiveCount;
     private final int notApplicableProductCount;
 
-    public OrderProductStatus(String productName, int orderQuantity, OrderProductType orderProductType, int additionalReceiveCount,
+    public OrderProductStatus(String productName, int orderQuantity, OrderProductType orderProductType,
+                              int additionalReceiveCount,
                               int notApplicableProductCount) {
         this.productName = productName;
         this.orderQuantity = orderQuantity;

@@ -30,6 +30,12 @@ public class OutputView {
         System.out.println(ERROR_PREFIX + exception.getMessage());
     }
 
+    public static void printBillPaper(BillPaper billPaper) {
+        printTotalOrderProducts(billPaper.getTotalOrderProducts());
+        printAdditionalReceiveProducts(billPaper.getAdditionalReceiveProducts());
+        printPrices(billPaper);
+    }
+
     private static void printStockStatusMessage() {
         System.out.println(STOCK_STATUS_MESSAGE);
     }
@@ -52,7 +58,8 @@ public class OutputView {
         String promotionName = stockStatus.getPromotionName();
 
         if (promotionStock > 0) {
-            System.out.printf(ENOUGH_PROMOTION_STOCK_QUANTITY_FORMAT, productName, price, promotionStock, promotionName);
+            System.out.printf(ENOUGH_PROMOTION_STOCK_QUANTITY_FORMAT, productName, price, promotionStock,
+                    promotionName);
             return;
         }
         System.out.printf(NOT_ENOUGH_PROMOTION_STOCK_QUANTITY_FORMAT, productName, price, promotionName);
@@ -70,27 +77,21 @@ public class OutputView {
         System.out.printf(NOT_ENOUGH_DEFAULT_STOCK_QUANTITY_FORMAT, productName, price);
     }
 
-    public static void printBillPaper(BillPaper billPaper) {
-        printTotalOrderProducts(billPaper.getTotalOrderProducts());
-        printAdditionalReceiveProducts(billPaper.getAdditionalReceiveProducts());
-        printPrices(billPaper);
-    }
-
     private static void printTotalOrderProducts(Map<Product, Integer> totalOrderProducts) {
         System.out.println("==============W 편의점================");
-        System.out.printf("%-8s%11s%-10s%-7s\n", "상품명"," ","수량", "금액");
+        System.out.printf("%-8s%11s%-10s%-7s\n", "상품명", " ", "수량", "금액");
 
         for (Product product : totalOrderProducts.keySet()) {
             String productName = product.getName();
             int quantity = totalOrderProducts.get(product);
             long price = product.calculatePrice(quantity);
-            System.out.printf("%-8s%11s%,-9d%-7d\n", productName, " ",quantity, price);
+            System.out.printf("%-8s%11s%,-9d%-7d\n", productName, " ", quantity, price);
         }
     }
 
     private static void printAdditionalReceiveProducts(Map<Product, Integer> additionalReceiveProducts) {
 
-        System.out.printf("%-19s%"+"16s", "=============증","정===============\n");
+        System.out.printf("%-19s%" + "16s", "=============증", "정===============\n");
         for (Product product : additionalReceiveProducts.keySet()) {
             String productName = product.getName();
             int quantity = additionalReceiveProducts.get(product);
@@ -114,8 +115,8 @@ public class OutputView {
         printAfterDiscountPrice(totalOrderPrice - (promotionDiscountPrice + membershipDiscountPrice));
     }
 
-    private static void printTotalOrderPrice(int totalOrderCount,long totalOrderPrice) {
-        System.out.printf("%-19s%-,9d%,d\n", "총구매액", totalOrderCount,totalOrderPrice);
+    private static void printTotalOrderPrice(int totalOrderCount, long totalOrderPrice) {
+        System.out.printf("%-19s%-,9d%,d\n", "총구매액", totalOrderCount, totalOrderPrice);
     }
 
     private static void printPromotionDiscountPrice(long promotionDiscountPrice) {

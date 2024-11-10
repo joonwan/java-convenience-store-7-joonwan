@@ -50,7 +50,7 @@ public class OrderService {
     private Map<String, Integer> parseItems(String items) {
         Map<String, Integer> parsedItems = new LinkedHashMap<>();
 
-        for(String item : items.split(PRODUCT_SEPARATOR)) {
+        for (String item : items.split(PRODUCT_SEPARATOR)) {
             String productName = getProductName(item);
             int orderQuantity = getOrderQuantity(item);
 
@@ -81,13 +81,13 @@ public class OrderService {
         if (parsedItems.containsKey(productName)) {
             int findOrderQuantity = parsedItems.get(productName);
             parsedItems.put(productName, findOrderQuantity + orderQuantity);
-            return ;
+            return;
         }
 
         parsedItems.put(productName, orderQuantity);
     }
 
-    private List<OrderProduct> createOrderProducts (Map<String, Integer> parsedItems) {
+    private List<OrderProduct> createOrderProducts(Map<String, Integer> parsedItems) {
         List<OrderProduct> orderProducts = new ArrayList<>();
         for (String productName : parsedItems.keySet()) {
             Product product = productRepository.findByName(productName);

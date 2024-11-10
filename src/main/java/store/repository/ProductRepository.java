@@ -30,8 +30,9 @@ public class ProductRepository {
         validateNotNull(name);
 
         Product product = store.get(name);
-        if (product == null)
+        if (product == null) {
             throw new IllegalArgumentException(NOT_FOUND_PRODUCT_ERROR_MESSAGE);
+        }
 
         return product;
     }

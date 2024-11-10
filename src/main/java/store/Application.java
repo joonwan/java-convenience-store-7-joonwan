@@ -16,8 +16,8 @@ public class Application {
         loadFile(promotionRepository, productRepository);
 
         ConvenienceStoreController convenienceStoreController = new ConvenienceStoreController(
-                                                                new ProductService(productRepository),
-                                                                new OrderService(productRepository));
+                new ProductService(productRepository),
+                new OrderService(productRepository));
 
         convenienceStoreController.run();
     }

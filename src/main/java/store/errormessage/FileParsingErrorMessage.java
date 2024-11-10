@@ -9,7 +9,6 @@ public final class FileParsingErrorMessage {
     public static final String INVALID_PROMOTION_QUANTITY_ERROR_MESSAGE = "수량은 정수 만 가능합니다.";
     public static final String INVALID_DATE_FORMAT_ERROR_MESSAGE = "날짜 입력 형식은 yyyy-MM-dd 입니다.";
 
-
     private FileParsingErrorMessage() {
     }
 }

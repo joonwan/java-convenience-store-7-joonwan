@@ -46,7 +46,7 @@ public class ProductInitializer {
                 .collect(Collectors.toList());
     }
 
-    public void validateEachContentsSize(List<String> contents) {
+    private void validateEachContentsSize(List<String> contents) {
         contents.stream()
                 .map(content -> content.split(REGEX))
                 .forEach(content -> validateSize(content));
