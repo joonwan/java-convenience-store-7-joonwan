@@ -40,23 +40,25 @@ public class BillPaper {
     }
 
     public void applyMembershipDiscount() {
-        double result = 0;
+        double sum = getNotPromotionAppliedTotalPrice();
+        membershipDiscountPrice = Double.valueOf(sum * 0.3).longValue();
+        if (membershipDiscountPrice > 8000) {
+            membershipDiscountPrice = 8000;
+        }
+    }
+
+    private double getNotPromotionAppliedTotalPrice() {
+        double sum = 0;
         for (Product product : totalOrderProducts.keySet()) {
             if (additionalReceiveProducts.get(product) != 0) {
                 continue;
             }
-
             int quantity = totalOrderProducts.get(product);
             long price = product.calculatePrice(quantity);
-            result += price * 0.3;
+            sum += price;
         }
-        if (result > 8000) {
-            membershipDiscountPrice = 8000;
-            return;
-        }
-        membershipDiscountPrice = Double.valueOf(result).longValue();
+        return sum;
     }
-
 
     public int getTotalOrderCount() {
         int total = 0;

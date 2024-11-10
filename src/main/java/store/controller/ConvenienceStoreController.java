@@ -71,7 +71,6 @@ public class ConvenienceStoreController {
 
     private void checkConfirm(List<OrderProductStatus> confirmedStatuses, OrderProductStatus orderProductStatus) {
         OrderProductType type = orderProductStatus.getOrderProductType();
-
         if (type.equals(NOT_APPLIED) || type.equals(CANNOT_RECEIVE)) {
             confirmedStatuses.add(orderProductStatus);
             return;
