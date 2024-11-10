@@ -1,6 +1,7 @@
 package store.controller;
 
 import static store.domain.Answer.*;
+import static store.domain.Answer.getAnswerType;
 import static store.domain.OrderProductType.*;
 
 import java.util.ArrayList;
@@ -34,9 +35,19 @@ public class ConvenienceStoreController {
             BillPaper billPaper = orderService.getBillPaper(confirmedOrderProductStatuses);
             attemptMembershipDiscount(billPaper);
             printBillPaper(billPaper);
-            Answer answer = getAnswerType(InputView.getContinueAnswer());
-            if (answer.equals(N)) {
+            Answer retryAnswer = getRetryAnswer();
+            if (retryAnswer.equals(N)) {
                 break;
+            }
+        }
+    }
+
+    private static Answer getRetryAnswer() {
+        while (true) {
+            try {
+                return getAnswerType(InputView.getContinueAnswer());
+            } catch (IllegalArgumentException e) {
+                OutputView.printError(e);
             }
         }
     }
