@@ -26,14 +26,6 @@ public class Promotion {
         return isAfterStartFromDateTime(orderDateTime) && isBeforeFromEndDateTime(orderDateTime);
     }
 
-    private boolean isAfterStartFromDateTime(LocalDateTime orderDateTime) {
-        return startDateTime.isEqual(orderDateTime) || startDateTime.isBefore(orderDateTime);
-    }
-
-    private boolean isBeforeFromEndDateTime(LocalDateTime orderDateTime) {
-        return endDateTime.isEqual(orderDateTime) || endDateTime.isAfter(orderDateTime);
-    }
-
     public boolean isPossibleGiveMoreProduct(int orderQuantity, int promotionStockQuantity) {
         return orderQuantity % (buy + get) == buy && get <= (promotionStockQuantity - orderQuantity);
     }
@@ -47,6 +39,14 @@ public class Promotion {
 
     public int getPromotionAppliedQuantity(int promotionStockQuantity) {
         return promotionStockQuantity / (buy + get) * (buy + get);
+    }
+
+    private boolean isAfterStartFromDateTime(LocalDateTime orderDateTime) {
+        return startDateTime.isEqual(orderDateTime) || startDateTime.isBefore(orderDateTime);
+    }
+
+    private boolean isBeforeFromEndDateTime(LocalDateTime orderDateTime) {
+        return endDateTime.isEqual(orderDateTime) || endDateTime.isAfter(orderDateTime);
     }
 
 }

@@ -86,7 +86,7 @@ public class OrderProduct {
     }
 
     private OrderProductType determineAdditionalPromotion() {
-        if (product.isAdditionalPromotion(orderQuantity)) {
+        if (product.isPossibleGiveMoreProduct(orderQuantity)) {
             return CAN_RECEIVE;
         }
         return CANNOT_RECEIVE;

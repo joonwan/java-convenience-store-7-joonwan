@@ -65,7 +65,7 @@ public class Product {
         return promotion != null && promotion.isAvailableApplyPromotion(orderDateTime);
     }
 
-    public boolean isAdditionalPromotion(int orderQuantity) {
+    public boolean isPossibleGiveMoreProduct(int orderQuantity) {
         return promotion.isPossibleGiveMoreProduct(orderQuantity, promotionStockQuantity);
     }
 
