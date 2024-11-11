@@ -13,6 +13,7 @@ import java.util.List;
 
 public class FileContentReader {
 
+    private static final String EMPTY_LINE = "";
     private final String filePath;
 
     public FileContentReader(String filePath) {
@@ -39,7 +40,7 @@ public class FileContentReader {
 
     private static List<String> readFile(BufferedReader bf) throws IOException {
         List<String> contents = new ArrayList<>();
-        String line = "";
+        String line = EMPTY_LINE;
 
         while ((line = bf.readLine()) != null) {
             contents.add(line);
