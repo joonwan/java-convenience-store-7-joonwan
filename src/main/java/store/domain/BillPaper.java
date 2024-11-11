@@ -8,30 +8,38 @@ import java.util.Map;
 
 public class BillPaper {
 
-    private long totalOrderPrice;
-    private long promotionDiscountPrice;
-    private long membershipDiscountPrice;
+    private boolean membershipDiscountApplied;
     private Map<Product, Integer> totalOrderProducts = new LinkedHashMap<>();
     private Map<Product, Integer> additionalReceiveProducts = new LinkedHashMap<>();
 
     public void updateOrder(Product product, int orderQuantity, int additionalReceiveCount) {
-        totalOrderPrice += (long) product.getPrice() * orderQuantity;
-        promotionDiscountPrice += (long) product.getPrice() * additionalReceiveCount;
-
         totalOrderProducts.put(product, orderQuantity);
-        additionalReceiveProducts.put(product, additionalReceiveCount);
+
+        if (additionalReceiveCount != 0) {
+            additionalReceiveProducts.put(product, additionalReceiveCount);
+        }
     }
 
     public long getTotalOrderPrice() {
+        long totalOrderPrice = 0;
+
+        for (Product product : totalOrderProducts.keySet()) {
+            int price = product.getPrice();
+            int quantity = totalOrderProducts.get(product);
+            totalOrderPrice += (long) price * quantity;
+        }
+
         return totalOrderPrice;
     }
 
     public long getPromotionDiscountPrice() {
+        long promotionDiscountPrice = 0;
+        for (Product product : additionalReceiveProducts.keySet()) {
+            int price = product.getPrice();
+            int quantity = additionalReceiveProducts.get(product);
+            promotionDiscountPrice += (long) price * quantity;
+        }
         return promotionDiscountPrice;
-    }
-
-    public long getMembershipDiscountPrice() {
-        return membershipDiscountPrice;
     }
 
     public Map<Product, Integer> getTotalOrderProducts() {
@@ -43,36 +51,40 @@ public class BillPaper {
     }
 
     public void applyMembershipDiscount() {
-        double sum = getNotPromotionAppliedTotalPrice();
-        membershipDiscountPrice = Double.valueOf(sum * MEMBERSHIP_PROMOTION_DISCOUNT_RATE).longValue();
+        membershipDiscountApplied = true;
+    }
+
+    public long getMembershipDiscountPrice() {
+        if (!membershipDiscountApplied) {
+            return 0;
+        }
+        double rawMembershipDiscountPrice = getNotPromotionAppliedTotalPrice() * MEMBERSHIP_PROMOTION_DISCOUNT_RATE;
+
+        long membershipDiscountPrice = Double.valueOf(rawMembershipDiscountPrice).longValue();
         if (membershipDiscountPrice > MAX_MEMBERSHIP_DISCOUNT_PRICE) {
             membershipDiscountPrice = MAX_MEMBERSHIP_DISCOUNT_PRICE;
         }
+        return membershipDiscountPrice;
     }
 
     public int getTotalOrderCount() {
-        int total = 0;
-        for (Product product : totalOrderProducts.keySet()) {
-            total += totalOrderProducts.get(product);
-        }
-        return total;
+        return totalOrderProducts.size();
     }
 
     private double getNotPromotionAppliedTotalPrice() {
         double sum = 0;
         for (Product product : totalOrderProducts.keySet()) {
-            if (isPromotionAppliedOrderProduct(product)) {
-                continue;
+            if (!isPromotionAppliedOrderProduct(product)) {
+                int quantity = totalOrderProducts.get(product);
+                long price = (long) product.getPrice() * quantity;
+                sum += price;
             }
-            int quantity = totalOrderProducts.get(product);
-            long price = (long) product.getPrice() * quantity;
-            sum += price;
         }
         return sum;
     }
 
     private boolean isPromotionAppliedOrderProduct(Product product) {
-        return additionalReceiveProducts.get(product) != 0;
+        return additionalReceiveProducts.containsKey(product);
     }
 
 }
