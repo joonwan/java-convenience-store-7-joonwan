@@ -7,6 +7,8 @@ import store.dto.StockStatus;
 
 public class Product {
 
+    private static final String EMPTY_PROMOTION_NAME = "";
+
     private final String name;
     private final int price;
     private int promotionStockQuantity;
@@ -22,6 +24,10 @@ public class Product {
 
     public String getName() {
         return name;
+    }
+
+    public int getPrice() {
+        return price;
     }
 
     public void increasePromotionQuantity(int amount) {
@@ -41,7 +47,7 @@ public class Product {
     }
 
     public StockStatus getStockStatus() {
-        String promotionName = "";
+        String promotionName = EMPTY_PROMOTION_NAME;
         if (promotion != null) {
             promotionName = promotion.getName();
         }
@@ -88,10 +94,6 @@ public class Product {
         }
 
         decreaseTotalQuantity(quantity);
-    }
-
-    public long calculatePrice(int quantity) {
-        return (long) quantity * price;
     }
 
     private void decreaseTotalQuantity(int quantity) {

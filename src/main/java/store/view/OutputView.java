@@ -84,7 +84,7 @@ public class OutputView {
         for (Product product : totalOrderProducts.keySet()) {
             String productName = product.getName();
             int quantity = totalOrderProducts.get(product);
-            long price = product.calculatePrice(quantity);
+            long price = (long) product.getPrice() * quantity;
             System.out.printf("%-8s%11s%,-9d%-7d\n", productName, " ", quantity, price);
         }
     }

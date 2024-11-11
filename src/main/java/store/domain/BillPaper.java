@@ -15,8 +15,8 @@ public class BillPaper {
     private Map<Product, Integer> additionalReceiveProducts = new LinkedHashMap<>();
 
     public void updateOrder(Product product, int orderQuantity, int additionalReceiveCount) {
-        totalOrderPrice += product.calculatePrice(orderQuantity);
-        promotionDiscountPrice += product.calculatePrice(additionalReceiveCount);
+        totalOrderPrice += (long) product.getPrice() * orderQuantity;
+        promotionDiscountPrice += (long) product.getPrice() * additionalReceiveCount;
 
         totalOrderProducts.put(product, orderQuantity);
         additionalReceiveProducts.put(product, additionalReceiveCount);
@@ -65,7 +65,7 @@ public class BillPaper {
                 continue;
             }
             int quantity = totalOrderProducts.get(product);
-            long price = product.calculatePrice(quantity);
+            long price = (long) product.getPrice() * quantity;
             sum += price;
         }
         return sum;

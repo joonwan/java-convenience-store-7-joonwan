@@ -35,32 +35,6 @@ public class OrderProduct {
         return createPromotionAppliedTypeProductStatus(type);
     }
 
-    private OrderProductStatus createNotAppliedTypeOrderProductStatus(OrderProductType type) {
-        String productName = product.getName();
-        return new OrderProductStatus(productName, orderQuantity, type, 0, 0);
-    }
-
-    private OrderProductStatus createPartialTypeOrderProductStatus(OrderProductType type) {
-        String productName = product.getName();
-        int additionalProductCount = getAdditionalGiftProductCount();
-        int notApplicableCount = getNotApplicableProductCount();
-        return new OrderProductStatus(productName, orderQuantity, type, additionalProductCount, notApplicableCount);
-    }
-
-    private OrderProductStatus createPromotionAppliedTypeProductStatus(OrderProductType type) {
-        String productName = product.getName();
-        int additionalProductCount = getAdditionalGiftProductCount();
-        return new OrderProductStatus(productName, orderQuantity, type, additionalProductCount, 0);
-    }
-
-    private int getNotApplicableProductCount() {
-        return product.getNotApplicableProductCount(orderQuantity);
-    }
-
-    private int getAdditionalGiftProductCount() {
-        return product.getAdditionalGiftProductCount(orderQuantity);
-    }
-
     private void validatePositiveQuantity(int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException(NEGATIVE_ORDER_QUANTITY_ERROR_MESSAGE.getContent());
@@ -91,4 +65,31 @@ public class OrderProduct {
         }
         return CANNOT_RECEIVE;
     }
+
+    private OrderProductStatus createNotAppliedTypeOrderProductStatus(OrderProductType type) {
+        String productName = product.getName();
+        return new OrderProductStatus(productName, orderQuantity, type, 0, 0);
+    }
+
+    private OrderProductStatus createPartialTypeOrderProductStatus(OrderProductType type) {
+        String productName = product.getName();
+        int additionalProductCount = getAdditionalGiftProductCount();
+        int notApplicableCount = getNotApplicableProductCount();
+        return new OrderProductStatus(productName, orderQuantity, type, additionalProductCount, notApplicableCount);
+    }
+
+    private int getAdditionalGiftProductCount() {
+        return product.getAdditionalGiftProductCount(orderQuantity);
+    }
+
+    private int getNotApplicableProductCount() {
+        return product.getNotApplicableProductCount(orderQuantity);
+    }
+
+    private OrderProductStatus createPromotionAppliedTypeProductStatus(OrderProductType type) {
+        String productName = product.getName();
+        int additionalProductCount = getAdditionalGiftProductCount();
+        return new OrderProductStatus(productName, orderQuantity, type, additionalProductCount, 0);
+    }
+
 }

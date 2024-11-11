@@ -98,12 +98,13 @@ public class ConvenienceStoreController {
         if (answer.equals(Y)) {
             int orderQuantity = status.getOrderQuantity();
             int additionalReceiveCount = status.getAdditionalReceiveCount();
-            addPromotionStock(status, orderQuantity, additionalReceiveCount);
+            increasePromotionProduct(status, orderQuantity, additionalReceiveCount);
         }
         statuses.add(status);
     }
 
-    private static void addPromotionStock(OrderProductStatus status, int orderQuantity, int additionalReceiveCount) {
+    private static void increasePromotionProduct(OrderProductStatus status, int orderQuantity,
+                                                 int additionalReceiveCount) {
         status.setOrderQuantity(orderQuantity + 1);
         status.setAdditionalReceiveCount(additionalReceiveCount + 1);
     }
