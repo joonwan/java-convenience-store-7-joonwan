@@ -1,19 +1,6 @@
 package store.util.parser;
 
-import static store.constants.FileParsingConst.FINISH_HOUR;
-import static store.constants.FileParsingConst.FINISH_MINUTE;
-import static store.constants.FileParsingConst.FINISH_SECOND;
-import static store.constants.FileParsingConst.LOCAL_DATE_FORMAT;
-import static store.constants.FileParsingConst.PROMOTION_BUY_INDEX;
-import static store.constants.FileParsingConst.PROMOTION_CONTENT_SIZE;
-import static store.constants.FileParsingConst.PROMOTION_END_DATE_INDEX;
-import static store.constants.FileParsingConst.PROMOTION_FILE_PROMOTION_NAME_INDEX;
-import static store.constants.FileParsingConst.PROMOTION_GET_INDEX;
-import static store.constants.FileParsingConst.PROMOTION_START_DATE_INDEX;
-import static store.constants.FileParsingConst.REGEX;
-import static store.constants.FileParsingConst.START_HOUR;
-import static store.constants.FileParsingConst.START_MINUTE;
-import static store.constants.FileParsingConst.START_SECOND;
+import static store.constants.FileParsingConst.*;
 import static store.errormessage.FileParsingErrorMessage.INVALID_DATE_FORMAT_ERROR_MESSAGE;
 import static store.errormessage.FileParsingErrorMessage.INVALID_PROMOTION_FILE_FORMAT_ERROR_MESSAGE;
 import static store.errormessage.FileParsingErrorMessage.INVALID_PROMOTION_QUANTITY_ERROR_MESSAGE;

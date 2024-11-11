@@ -50,7 +50,6 @@ public class OutputView {
         int price = stockStatus.getPrice();
         int promotionStock = stockStatus.getPromotionStock();
         String promotionName = stockStatus.getPromotionName();
-
         if (promotionStock > 0) {
             System.out.printf(ENOUGH_PROMOTION_STOCK_QUANTITY_FORMAT, productName, price, promotionStock,
                     promotionName);
