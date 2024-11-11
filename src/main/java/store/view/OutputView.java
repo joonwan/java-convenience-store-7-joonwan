@@ -1,12 +1,6 @@
 package store.view;
 
-import static store.viewmessage.OutputViewMessage.ENOUGH_DEFAULT_STOCK_QUANTITY_FORMAT;
-import static store.viewmessage.OutputViewMessage.ENOUGH_PROMOTION_STOCK_QUANTITY_FORMAT;
-import static store.viewmessage.OutputViewMessage.ERROR_PREFIX;
-import static store.viewmessage.OutputViewMessage.NOT_ENOUGH_DEFAULT_STOCK_QUANTITY_FORMAT;
-import static store.viewmessage.OutputViewMessage.NOT_ENOUGH_PROMOTION_STOCK_QUANTITY_FORMAT;
-import static store.viewmessage.OutputViewMessage.STOCK_STATUS_MESSAGE;
-import static store.viewmessage.OutputViewMessage.WELCOME_MESSAGE;
+import static store.viewmessage.OutputViewMessage.*;
 
 import java.util.List;
 import java.util.Map;
@@ -32,7 +26,7 @@ public class OutputView {
 
     public static void printBillPaper(BillPaper billPaper) {
         printTotalOrderProducts(billPaper.getTotalOrderProducts());
-        printAdditionalReceiveProducts(billPaper.getAdditionalReceiveProducts());
+        printGiftItems(billPaper.getAdditionalReceiveProducts());
         printPrices(billPaper);
     }
 
@@ -78,32 +72,35 @@ public class OutputView {
     }
 
     private static void printTotalOrderProducts(Map<Product, Integer> totalOrderProducts) {
-        System.out.println("==============W 편의점================");
-        System.out.printf("%-8s%11s%-10s%-7s\n", "상품명", " ", "수량", "금액");
+        System.out.println(BILL_PAPER_START_LINE);
+        System.out.printf(PRODUCT_COLUMN_INFO_FORMAT, PRODUCT_NAME, QUANTITY, PRICE);
 
         for (Product product : totalOrderProducts.keySet()) {
             String productName = product.getName();
             int quantity = totalOrderProducts.get(product);
             long price = (long) product.getPrice() * quantity;
-            System.out.printf("%-8s%11s%,-9d%-7d\n", productName, " ", quantity, price);
+            System.out.printf(PRODUCT_INFO_FORMAT, productName, quantity, price);
         }
     }
 
-    private static void printAdditionalReceiveProducts(Map<Product, Integer> additionalReceiveProducts) {
+    private static void printGiftItems(Map<Product, Integer> additionalReceiveProducts) {
+        printGiftItemTitle();
 
-        System.out.printf("%-19s%" + "16s", "=============증", "정===============\n");
         for (Product product : additionalReceiveProducts.keySet()) {
             String productName = product.getName();
             int quantity = additionalReceiveProducts.get(product);
-            if (quantity == 0) {
-                continue;
+            if (quantity != 0) {
+                System.out.printf(GIFT_ITEM_FORMAT, productName, quantity);
             }
-            System.out.printf("%-19s%,-16d\n", productName, quantity);
         }
     }
 
+    private static void printGiftItemTitle() {
+        System.out.printf(GIFT_ITEM_LINE_FORMAT, GIFT_ITEM_TITLE_PREFIX, GIFT_ITEM_TITLE_SUFFIX);
+    }
+
     private static void printPrices(BillPaper billPaper) {
-        System.out.println("====================================");
+        System.out.println(PRICE_INFO_START_LINE);
         long totalOrderPrice = billPaper.getTotalOrderPrice();
         int totalOrderCount = billPaper.getTotalOrderCount();
         long promotionDiscountPrice = billPaper.getPromotionDiscountPrice();
@@ -116,19 +113,19 @@ public class OutputView {
     }
 
     private static void printTotalOrderPrice(int totalOrderCount, long totalOrderPrice) {
-        System.out.printf("%-19s%-,9d%,d\n", "총구매액", totalOrderCount, totalOrderPrice);
+        System.out.printf(TOTAL_PRICE_FORMAT, TOTAL_PRICE, totalOrderCount, totalOrderPrice);
     }
 
     private static void printPromotionDiscountPrice(long promotionDiscountPrice) {
-        System.out.printf("%-19s%,16d\n", "행사할인", -promotionDiscountPrice);
+        System.out.printf(PROMOTION_DISCOUNT_PRICE_FORMAT, PROMOTION_DISCOUNT, promotionDiscountPrice);
     }
 
     private static void printMembershipDiscountPrice(long membershipDiscountPrice) {
-        System.out.printf("%-19s%,16d\n", "멤버십 할인", -membershipDiscountPrice);
+        System.out.printf(MEMBERSHIP_DISCOUNT_PRICE_FORMAT, MEMBERSHIP_DISCOUNT, membershipDiscountPrice);
     }
 
     private static void printAfterDiscountPrice(long afterDiscountPrice) {
-        System.out.printf("%-19s%,16d\n", "내실돈", afterDiscountPrice);
+        System.out.printf(RESULT_PRICE_FORMAT, RESULT_PRICE, afterDiscountPrice);
     }
 
 }

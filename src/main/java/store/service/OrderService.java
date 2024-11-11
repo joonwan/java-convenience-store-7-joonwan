@@ -100,6 +100,7 @@ public class OrderService {
     private void decreaseStockQuantity(OrderProductStatus orderProductStatus) {
         String productName = orderProductStatus.getProductName();
         Product product = productRepository.findByName(productName);
+
         OrderProductType type = orderProductStatus.getOrderProductType();
         int orderQuantity = orderProductStatus.getOrderQuantity();
 
