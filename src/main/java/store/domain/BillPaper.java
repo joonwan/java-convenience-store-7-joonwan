@@ -77,7 +77,13 @@ public class BillPaper {
     }
 
     public int getTotalOrderCount() {
-        return totalOrderProducts.size();
+        int totalOrderCount = 0;
+
+        for (Product product : totalOrderProducts.keySet()) {
+            int orderCount = totalOrderProducts.get(product);
+            totalOrderCount += orderCount;
+        }
+        return totalOrderCount;
     }
 
     private double getNotPromotionAppliedTotalPrice() {
