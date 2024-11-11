@@ -6,7 +6,7 @@ public final class OutputViewMessage {
     public static final String ERROR_PREFIX = "[ERROR] ";
     public static final String STOCK_STATUS_MESSAGE = "현재 보유하고 있는 상품입니다.\n";
 
-    public static final String BILL_PAPER_START_LINE = "==============W 편의점================";
+    public static final String BILL_PAPER_START_LINE = "\n==============W 편의점================";
     public static final String PRICE_INFO_START_LINE = "====================================";
 
     public static final String GIFT_ITEM_TITLE_PREFIX = "=============증";
