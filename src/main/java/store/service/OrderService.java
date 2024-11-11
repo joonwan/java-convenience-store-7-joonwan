@@ -73,7 +73,7 @@ public class OrderService {
 
             return Integer.parseInt(rawOrderQuantity.substring(startIndex, endIndex));
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(INVALID_ORDER_QUANTITY_TYPE_ERROR_MESSAGE);
+            throw new IllegalArgumentException(INVALID_ORDER_QUANTITY_TYPE_ERROR_MESSAGE.getContent());
         }
     }
 

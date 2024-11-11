@@ -41,7 +41,7 @@ public class PromotionFileParser {
 
     private static void validateFormat(final List<String> promotionContents) {
         if (promotionContents.size() != PROMOTION_CONTENT_SIZE) {
-            throw new IllegalArgumentException(INVALID_PROMOTION_FILE_FORMAT_ERROR_MESSAGE);
+            throw new IllegalArgumentException(INVALID_PROMOTION_FILE_FORMAT_ERROR_MESSAGE.getContent());
         }
     }
 
@@ -59,7 +59,7 @@ public class PromotionFileParser {
         try {
             return Integer.parseInt(rawQuantity);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(INVALID_PROMOTION_QUANTITY_ERROR_MESSAGE);
+            throw new IllegalArgumentException(INVALID_PROMOTION_QUANTITY_ERROR_MESSAGE.getContent());
         }
     }
 
@@ -68,7 +68,7 @@ public class PromotionFileParser {
             LocalDate startDate = LocalDate.parse(rawLocalDate, DateTimeFormatter.ofPattern(LOCAL_DATE_FORMAT));
             return startDate.atTime(getStartTime());
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException(INVALID_DATE_FORMAT_ERROR_MESSAGE);
+            throw new IllegalArgumentException(INVALID_DATE_FORMAT_ERROR_MESSAGE.getContent());
         }
     }
 
@@ -81,7 +81,7 @@ public class PromotionFileParser {
             LocalDate date = LocalDate.parse(rawLocalDate, DateTimeFormatter.ofPattern(LOCAL_DATE_FORMAT));
             return date.atTime(getEndTime());
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException(INVALID_DATE_FORMAT_ERROR_MESSAGE);
+            throw new IllegalArgumentException(INVALID_DATE_FORMAT_ERROR_MESSAGE.getContent());
         }
     }
 

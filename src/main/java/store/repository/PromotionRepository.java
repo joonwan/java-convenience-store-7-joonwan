@@ -20,7 +20,7 @@ public class PromotionRepository {
 
         Promotion findPromotion = store.get(name);
         if (findPromotion == null) {
-            throw new IllegalArgumentException(NOT_FOUND_PROMOTION_ERROR_MESSAGE);
+            throw new IllegalArgumentException(NOT_FOUND_PROMOTION_ERROR_MESSAGE.getContent());
         }
         return findPromotion;
     }
@@ -39,7 +39,7 @@ public class PromotionRepository {
 
     private void validateNotNull(String name) {
         if (name == null) {
-            throw new IllegalArgumentException(FIND_BY_NULL_ERROR_MESSAGE);
+            throw new IllegalArgumentException(FIND_BY_NULL_ERROR_MESSAGE.getContent());
         }
     }
 

@@ -31,7 +31,7 @@ public class ProductRepository {
 
         Product product = store.get(name);
         if (product == null) {
-            throw new IllegalArgumentException(NOT_FOUND_PRODUCT_ERROR_MESSAGE);
+            throw new IllegalArgumentException(NOT_FOUND_PRODUCT_ERROR_MESSAGE.getContent());
         }
 
         return product;
@@ -51,13 +51,13 @@ public class ProductRepository {
 
     private void validateNotDuplicatedKey(String name) {
         if (store.containsKey(name)) {
-            throw new IllegalArgumentException(DUPLICATED_PRODUCT_NAME_ERROR_MESSAGE);
+            throw new IllegalArgumentException(DUPLICATED_PRODUCT_NAME_ERROR_MESSAGE.getContent());
         }
     }
 
     private void validateNotNull(String name) {
         if (name == null) {
-            throw new IllegalArgumentException(FIND_BY_NULL_ERROR_MESSAGE);
+            throw new IllegalArgumentException(FIND_BY_NULL_ERROR_MESSAGE.getContent());
         }
     }
 }

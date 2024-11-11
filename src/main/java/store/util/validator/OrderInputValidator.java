@@ -24,13 +24,13 @@ public class OrderInputValidator {
 
     private static void validateNotEmptyString(String items) {
         if (items.isBlank()) {
-            throw new IllegalArgumentException(EMPTY_STRING_ERROR_MESSAGE);
+            throw new IllegalArgumentException(EMPTY_STRING_ERROR_MESSAGE.getContent());
         }
     }
 
     private static void validateSquareBrackets(String item) {
         if (!isSurroundedBySquareBrackets(item)) {
-            throw new IllegalArgumentException(INVALID_SQUARE_BRACKETS_ERROR_MESSAGE);
+            throw new IllegalArgumentException(INVALID_SQUARE_BRACKETS_ERROR_MESSAGE.getContent());
         }
     }
 
@@ -40,7 +40,7 @@ public class OrderInputValidator {
 
     private static void validateContainSeparator(String item) {
         if (!item.contains(SEPARATOR)) {
-            throw new IllegalArgumentException(INVALID_SEPARATOR_ERROR_MESSAGE);
+            throw new IllegalArgumentException(INVALID_SEPARATOR_ERROR_MESSAGE.getContent());
         }
     }
 
@@ -52,7 +52,7 @@ public class OrderInputValidator {
             }
         }
         if (separatorCount != 1) {
-            throw new IllegalArgumentException(INVALID_SEPARATOR_COUNT_ERROR_MESSAGE);
+            throw new IllegalArgumentException(INVALID_SEPARATOR_COUNT_ERROR_MESSAGE.getContent());
         }
     }
 }

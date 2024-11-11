@@ -63,13 +63,13 @@ public class OrderProduct {
 
     private void validatePositiveQuantity(int quantity) {
         if (quantity <= 0) {
-            throw new IllegalArgumentException(NEGATIVE_ORDER_QUANTITY_ERROR_MESSAGE);
+            throw new IllegalArgumentException(NEGATIVE_ORDER_QUANTITY_ERROR_MESSAGE.getContent());
         }
     }
 
     private void validateEnoughQuantity(Product product, int quantity, LocalDateTime orderDateTime) {
         if (!product.isEnoughStockQuantity(quantity, orderDateTime)) {
-            throw new IllegalArgumentException(NOT_ENOUGH_STOCK_QUANTITY_ERROR_MESSAGE);
+            throw new IllegalArgumentException(NOT_ENOUGH_STOCK_QUANTITY_ERROR_MESSAGE.getContent());
         }
     }
 

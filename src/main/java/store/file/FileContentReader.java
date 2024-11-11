@@ -25,9 +25,9 @@ public class FileContentReader {
             BufferedReader bf = new BufferedReader(new FileReader(filePath));
             return readFile(bf);
         } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException(NOT_FOUND_FILE_ERROR_MESSAGE);
+            throw new IllegalArgumentException(NOT_FOUND_FILE_ERROR_MESSAGE.getContent());
         } catch (IOException e) {
-            throw new IllegalArgumentException(READ_FILE_ERROR_MESSAGE);
+            throw new IllegalArgumentException(READ_FILE_ERROR_MESSAGE.getContent());
         }
     }
 
@@ -44,7 +44,7 @@ public class FileContentReader {
 
     private void validateNotNull(String filePath) {
         if (filePath == null) {
-            throw new IllegalArgumentException(NULL_PATH_ERROR_MESSAGE);
+            throw new IllegalArgumentException(NULL_PATH_ERROR_MESSAGE.getContent());
         }
     }
 }

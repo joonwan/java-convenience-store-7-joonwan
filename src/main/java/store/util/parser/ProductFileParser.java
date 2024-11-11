@@ -65,7 +65,7 @@ public class ProductFileParser {
         try {
             return Integer.parseInt(price);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(INVALID_PRICE_TYPE_ERROR_MESSAGE);
+            throw new IllegalArgumentException(INVALID_PRICE_TYPE_ERROR_MESSAGE.getContent());
         }
     }
 
@@ -73,7 +73,7 @@ public class ProductFileParser {
         try {
             return Integer.parseInt(defaultQuantity);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(INVALID_QUANTITY_TYPE_ERROR_MESSAGE);
+            throw new IllegalArgumentException(INVALID_QUANTITY_TYPE_ERROR_MESSAGE.getContent());
         }
     }
 }
