@@ -31,6 +31,12 @@ public class FileContentReader {
         }
     }
 
+    private void validateNotNull(String filePath) {
+        if (filePath == null) {
+            throw new IllegalArgumentException(NULL_PATH_ERROR_MESSAGE.getContent());
+        }
+    }
+
     private static List<String> readFile(BufferedReader bf) throws IOException {
         List<String> contents = new ArrayList<>();
         String line = "";
@@ -42,9 +48,4 @@ public class FileContentReader {
         return contents;
     }
 
-    private void validateNotNull(String filePath) {
-        if (filePath == null) {
-            throw new IllegalArgumentException(NULL_PATH_ERROR_MESSAGE.getContent());
-        }
-    }
 }

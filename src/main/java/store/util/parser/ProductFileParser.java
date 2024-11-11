@@ -45,14 +45,6 @@ public class ProductFileParser {
         return productComponents[PRODUCT_NAME_INDEX].trim();
     }
 
-    private static Product createPromotionProduct(List<String> productComponents) {
-        String name = productComponents.get(PRODUCT_NAME_INDEX);
-        int price = parseToPrice(productComponents.get(PRODUCT_PRICE_INDEX));
-        int promotionQuantity = parseToQuantity(productComponents.get(PRODUCT_QUANTITY_INDEX));
-
-        return new Product(name, price, promotionQuantity, 0);
-    }
-
     private static Product createDefaultProduct(List<String> productComponents) {
         String name = productComponents.get(PRODUCT_NAME_INDEX);
         int price = parseToPrice(productComponents.get(PRODUCT_PRICE_INDEX));
@@ -61,12 +53,12 @@ public class ProductFileParser {
         return new Product(name, price, 0, defaultQuantity);
     }
 
-    private static int parseToPrice(String price) {
-        try {
-            return Integer.parseInt(price);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(INVALID_PRICE_TYPE_ERROR_MESSAGE.getContent());
-        }
+    private static Product createPromotionProduct(List<String> productComponents) {
+        String name = productComponents.get(PRODUCT_NAME_INDEX);
+        int price = parseToPrice(productComponents.get(PRODUCT_PRICE_INDEX));
+        int promotionQuantity = parseToQuantity(productComponents.get(PRODUCT_QUANTITY_INDEX));
+
+        return new Product(name, price, promotionQuantity, 0);
     }
 
     private static int parseToQuantity(String defaultQuantity) {
@@ -74,6 +66,14 @@ public class ProductFileParser {
             return Integer.parseInt(defaultQuantity);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(INVALID_QUANTITY_TYPE_ERROR_MESSAGE.getContent());
+        }
+    }
+
+    private static int parseToPrice(String price) {
+        try {
+            return Integer.parseInt(price);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(INVALID_PRICE_TYPE_ERROR_MESSAGE.getContent());
         }
     }
 }

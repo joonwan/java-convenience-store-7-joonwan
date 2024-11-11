@@ -17,8 +17,8 @@ public class PromotionRepository {
 
     public Promotion findByPromotionName(String name) {
         validateNotNull(name);
-
         Promotion findPromotion = store.get(name);
+
         if (findPromotion == null) {
             throw new IllegalArgumentException(NOT_FOUND_PROMOTION_ERROR_MESSAGE.getContent());
         }

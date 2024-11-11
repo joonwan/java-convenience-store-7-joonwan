@@ -25,7 +25,6 @@ public class ProductRepository {
                 .collect(Collectors.toList());
     }
 
-
     public Product findByName(String name) {
         validateNotNull(name);
 

@@ -14,7 +14,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<StockStatus> getProductsStockStatus() {
+    public List<StockStatus> getAllProductsStockStatus() {
         List<Product> products = productRepository.findAll();
         return products.stream()
                 .map(Product::getStockStatus)

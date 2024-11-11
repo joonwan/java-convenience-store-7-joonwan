@@ -46,7 +46,7 @@ public class ConvenienceStoreController {
     }
 
     private void printProductsStockStatus() {
-        List<StockStatus> productsStockStatus = productService.getProductsStockStatus();
+        List<StockStatus> productsStockStatus = productService.getAllProductsStockStatus();
         OutputView.printStockStatuses(productsStockStatus);
     }
 
@@ -96,15 +96,15 @@ public class ConvenienceStoreController {
     private static void updateAdditionalReceive(List<OrderProductStatus> statuses, OrderProductStatus status) {
         UserAnswer answer = getAnswerType(InputView.getAdditionalProductAnswer(status));
         if (answer.equals(Y)) {
-            int orderQuantity = status.getOrderQuantity();
-            int additionalReceiveCount = status.getAdditionalReceiveCount();
-            increasePromotionProduct(status, orderQuantity, additionalReceiveCount);
+            increasePromotionProduct(status);
         }
         statuses.add(status);
     }
 
-    private static void increasePromotionProduct(OrderProductStatus status, int orderQuantity,
-                                                 int additionalReceiveCount) {
+    private static void increasePromotionProduct(OrderProductStatus status) {
+        int orderQuantity = status.getOrderQuantity();
+        int additionalReceiveCount = status.getAdditionalReceiveCount();
+
         status.setOrderQuantity(orderQuantity + 1);
         status.setAdditionalReceiveCount(additionalReceiveCount + 1);
     }
