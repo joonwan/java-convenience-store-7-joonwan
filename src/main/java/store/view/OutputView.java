@@ -89,9 +89,7 @@ public class OutputView {
         for (Product product : additionalReceiveProducts.keySet()) {
             String productName = product.getName();
             int quantity = additionalReceiveProducts.get(product);
-            if (quantity != 0) {
-                System.out.printf(GIFT_ITEM_FORMAT, productName, quantity);
-            }
+            System.out.printf(GIFT_ITEM_FORMAT, productName, quantity);
         }
     }
 
@@ -103,13 +101,11 @@ public class OutputView {
         System.out.println(PRICE_INFO_START_LINE);
         long totalOrderPrice = billPaper.getTotalOrderPrice();
         int totalOrderCount = billPaper.getTotalOrderCount();
-        long promotionDiscountPrice = billPaper.getPromotionDiscountPrice();
-        long membershipDiscountPrice = billPaper.getMembershipDiscountPrice();
 
         printTotalOrderPrice(totalOrderCount, totalOrderPrice);
-        printPromotionDiscountPrice(promotionDiscountPrice);
-        printMembershipDiscountPrice(membershipDiscountPrice);
-        printAfterDiscountPrice(totalOrderPrice - (promotionDiscountPrice + membershipDiscountPrice));
+        printPromotionDiscountPrice(billPaper.getPromotionDiscountPrice());
+        printMembershipDiscountPrice(billPaper.getMembershipDiscountPrice());
+        printAfterDiscountPrice(billPaper.getAfterDiscountPrice());
     }
 
     private static void printTotalOrderPrice(int totalOrderCount, long totalOrderPrice) {

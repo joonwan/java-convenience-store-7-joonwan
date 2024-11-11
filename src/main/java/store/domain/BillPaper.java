@@ -9,8 +9,16 @@ import java.util.Map;
 public class BillPaper {
 
     private boolean membershipDiscountApplied;
-    private Map<Product, Integer> totalOrderProducts = new LinkedHashMap<>();
-    private Map<Product, Integer> additionalReceiveProducts = new LinkedHashMap<>();
+    private final Map<Product, Integer> totalOrderProducts = new LinkedHashMap<>();
+    private final Map<Product, Integer> additionalReceiveProducts = new LinkedHashMap<>();
+
+    public Map<Product, Integer> getTotalOrderProducts() {
+        return new LinkedHashMap<>(totalOrderProducts);
+    }
+
+    public Map<Product, Integer> getAdditionalReceiveProducts() {
+        return new LinkedHashMap<>(additionalReceiveProducts);
+    }
 
     public void updateOrder(Product product, int orderQuantity, int additionalReceiveCount) {
         totalOrderProducts.put(product, orderQuantity);
@@ -42,12 +50,13 @@ public class BillPaper {
         return promotionDiscountPrice;
     }
 
-    public Map<Product, Integer> getTotalOrderProducts() {
-        return new LinkedHashMap<>(totalOrderProducts);
-    }
+    public long getAfterDiscountPrice() {
+        long totalOrderPrice = getTotalOrderPrice();
+        long promotionDiscountPrice = getPromotionDiscountPrice();
+        long membershipDiscountPrice = getMembershipDiscountPrice();
 
-    public Map<Product, Integer> getAdditionalReceiveProducts() {
-        return new LinkedHashMap<>(additionalReceiveProducts);
+        long totalDiscountPrice = promotionDiscountPrice + membershipDiscountPrice;
+        return totalOrderPrice - totalDiscountPrice;
     }
 
     public void applyMembershipDiscount() {
